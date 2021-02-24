@@ -5,14 +5,80 @@ plugins {
 }
 
 group 'com.github.kayjam'
+archivesBaseName = "executor"
 version '0.1'
 
 dependencies {
     implementation group: 'com.github.kayjamlang', name: 'core', version: '0.1'
-    //implementation project(":core")
     testCompile group: 'junit', name: 'junit', version: '4.13'
 }
 
 repositories {
     mavenCentral()
+}
+
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            groupId = 'com.github.kayjamlang'
+            artifactId = project.archivesBaseName
+            version = project.version
+
+            pom {
+                name = 'KayJam Executor'
+                description = 'Provided by the KayJam code executor'
+                url = 'https://github.com/KayJamLang/executor'
+                licenses {
+                    license {
+                        name = 'GNU General Public License v3.0'
+                        url = 'https://www.gnu.org/licenses/gpl-3.0.html'
+                    }
+                }
+
+                developers {
+                    developer {
+                        id = 'levkopo'
+                        name = 'Lev Koporushkin'
+                        email = 'levkopoag@gmail.com'
+                    }
+                }
+
+                scm {
+                    connection = 'scm:git:git://github.com/KayJamLang/executor.git'
+                    developerConnection = 'scm:git:ssh://github.com/KayJamLang/executor.git'
+                    url = 'https://github.com/KayJamLang/executor'
+                }
+            }
+
+            from components.java
+        }
+    }
+
+    repositories {
+        maven {
+            url 'https://oss.sonatype.org/service/local/staging/deploy/maven2/'
+            credentials {
+                username sonatypeUsername
+                password sonatypePassword
+            }
+        }
+
+        maven {
+            name = "GitHubPackages"
+            url = uri("https://maven.pkg.github.com/KayJamLang/"+project.archivesBaseName)
+            credentials {
+                username = githubUsername
+                password = githubKey
+            }
+        }
+    }
+}
+
+java {
+    withJavadocJar()
+    withSourcesJar()
+}
+
+signing {
+    sign publishing.publications.mavenJava
 }
