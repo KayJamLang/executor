@@ -18,7 +18,7 @@ public class AccessExecutor extends ExpressionProvider<Access, Object> {
             ObjectContainer object = (ObjectContainer) root;
 
             Context rootContext = (Context) object.data.get("ctx");
-            return mainProvider.provide(expression.child, rootContext, rootContext);
+            return mainProvider.provide(expression.child, rootContext, argsContext);
         }
 
         throw new KayJamRuntimeException(expression.root, "Expected object or class root");

@@ -20,7 +20,7 @@ public class VariableSetExecutor extends ExpressionProvider<VariableSet, Object>
                     "\"! Please create variable!");
 
         Object value =
-                mainProvider.provide(expression.expression, context, argsContext);
+                mainProvider.provide(expression.expression, argsContext, argsContext);
         context.variables.put(expression.name, value);
 
         return value;

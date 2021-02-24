@@ -4,10 +4,7 @@ import com.github.kayjam.executor.exceptions.KayJamNotFoundException;
 import com.github.kayjam.executor.exceptions.KayJamRuntimeException;
 import com.github.kayjam.executor.executors.*;
 import com.github.kayjamlang.core.Expression;
-import com.github.kayjamlang.core.containers.ClassContainer;
-import com.github.kayjamlang.core.containers.Container;
-import com.github.kayjamlang.core.containers.Function;
-import com.github.kayjamlang.core.containers.ObjectContainer;
+import com.github.kayjamlang.core.containers.*;
 import com.github.kayjamlang.core.expressions.*;
 import com.github.kayjamlang.core.provider.MainContext;
 import com.github.kayjamlang.core.provider.MainExpressionProvider;
@@ -39,27 +36,33 @@ public class Executor extends MainExpressionProvider<Object> {
     }
 
     public Object execute(Container container) throws Exception {
-        MainContext context = new MainContext(container, null);
+        mainContext = new MainContext(container, null);
         for(Expression expression: container.children) {
             if (expression instanceof ClassContainer) {
                 ClassContainer classContainer = (ClassContainer) expression;
-                if (context.classes.containsKey(classContainer.name))
+                if (mainContext.classes.containsKey(classContainer.name))
                     throw new KayJamRuntimeException(classContainer,
                             "A class with the same name has already been declared");
 
-                context.classes.put(classContainer.name, classContainer);
+                for(Expression classExpression: classContainer.children)
+                    if(!classExpression.getClass().equals(Variable.class)&&
+                        !(classExpression instanceof ConstructorContainer))
+                        throw new KayJamRuntimeException(
+                                classExpression, "The class can only contain variables and functions");
+
+                mainContext.classes.put(classContainer.name, classContainer);
             }
         }
 
-        for(Map.Entry<String, ClassContainer> entry: context.classes.entrySet()) {
+        for(Map.Entry<String, ClassContainer> entry: mainContext.classes.entrySet()) {
             ClassContainer classContainer = entry.getValue();
 
             for(String string: classContainer.implementsClass) {
-                if (!context.classes.containsKey(string))
+                if (!mainContext.classes.containsKey(string))
                     throw new KayJamNotFoundException(classContainer,
                             "class interface", string);
 
-                ClassContainer implementsClass = context.classes.get(string);
+                ClassContainer implementsClass = mainContext.classes.get(string);
                 for(Function function: implementsClass.functions){
                     Function fun = findFunction(classContainer, function);
                     if(!fun.returnType.name.equals(function.returnType.name))
@@ -72,7 +75,7 @@ public class Executor extends MainExpressionProvider<Object> {
 
 
         return provide(container,
-            context, context);
+            mainContext, mainContext);
     }
 
     private Function findFunction(ClassContainer classContainer, Function function) throws KayJamRuntimeException {

@@ -14,7 +14,7 @@ public class VariableLinkExecutor extends ExpressionProvider<VariableLink, Objec
                           Context argsContext,
                           VariableLink expression) throws NotFoundException {
         if(!context.variables.containsKey(expression.name))
-            throw new NotFoundException(expression, expression.name, "var");
+            throw new NotFoundException(expression, "var", expression.name);
 
         return context.variables.get(expression.name);
     }
