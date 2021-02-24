@@ -18,7 +18,7 @@ public class Main {
                 "       return this.value;" +
                 "   }" +
                 "}" +
-                
+
                 "class Base {" +
                 "   fun test():int {}" +
                 "}" +
