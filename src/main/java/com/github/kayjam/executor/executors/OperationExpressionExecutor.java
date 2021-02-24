@@ -15,6 +15,7 @@ public class OperationExpressionExecutor extends ExpressionProvider<OperationExp
                           Context context,
                           Context argsContext,
                           OperationExpression expression) throws Exception {
+        
         if(expression.operation!=null) {
             Object left = mainProvider.provide(expression.left, context, argsContext);
             Object right = mainProvider.provide(expression.right, context, argsContext);
