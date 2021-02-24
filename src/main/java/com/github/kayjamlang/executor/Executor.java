@@ -5,16 +5,21 @@ import com.github.kayjamlang.core.KayJamLexer;
 import com.github.kayjamlang.core.KayJamParser;
 import com.github.kayjamlang.core.containers.*;
 import com.github.kayjamlang.core.expressions.*;
+import com.github.kayjamlang.core.provider.Context;
 import com.github.kayjamlang.core.provider.MainContext;
 import com.github.kayjamlang.core.provider.MainExpressionProvider;
 import com.github.kayjamlang.executor.exceptions.KayJamNotFoundException;
 import com.github.kayjamlang.executor.exceptions.KayJamRuntimeException;
 import com.github.kayjamlang.executor.executors.*;
+import com.github.kayjamlang.executor.libs.Library;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 
 public class Executor extends MainExpressionProvider<Object> {
+
+    private final List<Library> libraries = new ArrayList<>();
 
     public Executor() {
         super(null);
@@ -29,13 +34,23 @@ public class Executor extends MainExpressionProvider<Object> {
         addCompiler(VariableLink.class, new VariableLinkExecutor());
         addCompiler(VariableSet.class, new VariableSetExecutor());
 
+        //Execute libraries functions
+        addCompiler(Library.CodeExecExpression.class, new CodeExecExpressionExecutor());
+
         //Other
         addCompiler(Access.class, new AccessExecutor());
+        addCompiler(CompanionAccess.class, new CompanionAccessExecutor());
         addCompiler(Const.class, new ConstExecutor());
+        addCompiler(Array.class, new ArrayExecutor());
         addCompiler(Return.class, new ReturnExecutor());
         addCompiler(If.class, new IfExecutor());
         addCompiler(CallCreate.class, new CallCreateExecutor());
         addCompiler(OperationExpression.class, new OperationExpressionExecutor());
+    }
+
+    public Executor addLibrary(Library library){
+        libraries.add(library);
+        return this;
     }
 
     public Object execute(String code) throws Exception {
@@ -45,6 +60,11 @@ public class Executor extends MainExpressionProvider<Object> {
 
     public Object execute(Container container) throws Exception {
         mainContext = new MainContext(container, null);
+        for(Library library: libraries){
+            mainContext.classes.putAll(library.classes);
+            container.functions.addAll(library.functions);
+        }
+
         for(Expression expression: container.children) {
             if (expression instanceof ClassContainer) {
                 ClassContainer classContainer = (ClassContainer) expression;
@@ -78,6 +98,16 @@ public class Executor extends MainExpressionProvider<Object> {
                 }
 
                 classContainer.children.addAll(implementsClass.children);
+            }
+
+            if(classContainer.companion!=null){
+                Context ctx = new Context(classContainer.companion, mainContext, false);
+                for(Expression child: classContainer.companion.children){
+                    if(child.getClass()==Variable.class)
+                        provide(child, ctx, ctx);
+                }
+
+                classContainer.companion.data.put("ctx", ctx);
             }
         }
 
