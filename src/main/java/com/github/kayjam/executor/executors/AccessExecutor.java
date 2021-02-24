@@ -1,0 +1,26 @@
+package com.github.kayjam.executor.executors;
+
+import com.github.kayjamlang.core.containers.ObjectContainer;
+import com.github.kayjamlang.core.expressions.Access;
+import com.github.kayjamlang.core.provider.Context;
+import com.github.kayjamlang.core.provider.ExpressionProvider;
+import com.github.kayjamlang.core.provider.MainExpressionProvider;
+import com.github.kayjam.executor.exceptions.KayJamRuntimeException;
+
+public class AccessExecutor extends ExpressionProvider<Access, Object> {
+    @Override
+    public Object provide(MainExpressionProvider<Object> mainProvider,
+                          Context context,
+                          Context argsContext,
+                          Access expression) throws Exception {
+        Object root = mainProvider.provide(expression.root, context, argsContext);
+        if(root instanceof ObjectContainer){
+            ObjectContainer object = (ObjectContainer) root;
+
+            Context rootContext = (Context) object.data.get("ctx");
+            return mainProvider.provide(expression.child, rootContext, rootContext);
+        }
+
+        throw new KayJamRuntimeException(expression.root, "Expected object or class root");
+    }
+}
