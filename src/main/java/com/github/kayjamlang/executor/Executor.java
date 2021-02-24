@@ -1,6 +1,8 @@
 package com.github.kayjamlang.executor;
 
 import com.github.kayjamlang.core.Expression;
+import com.github.kayjamlang.core.KayJamLexer;
+import com.github.kayjamlang.core.KayJamParser;
 import com.github.kayjamlang.core.containers.*;
 import com.github.kayjamlang.core.expressions.*;
 import com.github.kayjamlang.core.provider.MainContext;
@@ -10,6 +12,7 @@ import com.github.kayjamlang.executor.exceptions.KayJamRuntimeException;
 import com.github.kayjamlang.executor.executors.*;
 
 import java.util.Map;
+import java.util.Objects;
 
 public class Executor extends MainExpressionProvider<Object> {
 
@@ -33,6 +36,11 @@ public class Executor extends MainExpressionProvider<Object> {
         addCompiler(If.class, new IfExecutor());
         addCompiler(CallCreate.class, new CallCreateExecutor());
         addCompiler(OperationExpression.class, new OperationExpressionExecutor());
+    }
+
+    public Object execute(String code) throws Exception {
+        KayJamParser parser = new KayJamParser(new KayJamLexer(code));
+        return execute((Container) parser.readExpression());
     }
 
     public Object execute(Container container) throws Exception {
