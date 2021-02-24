@@ -1,4 +1,4 @@
-package com.github.kayjam.executor.executors;
+package com.github.kayjamlang.executor.executors;
 
 import com.github.kayjamlang.core.Expression;
 import com.github.kayjamlang.core.containers.ClassContainer;
@@ -11,7 +11,7 @@ import com.github.kayjamlang.core.opcodes.AccessIdentifier;
 import com.github.kayjamlang.core.provider.Context;
 import com.github.kayjamlang.core.provider.ExpressionProvider;
 import com.github.kayjamlang.core.provider.MainExpressionProvider;
-import com.github.kayjam.executor.TypeUtils;
+import com.github.kayjamlang.executor.TypeUtils;
 
 import java.util.ArrayList;
 import java.util.List;

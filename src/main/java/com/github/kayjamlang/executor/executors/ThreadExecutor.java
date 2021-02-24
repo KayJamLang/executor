@@ -1,4 +1,4 @@
-package com.github.kayjam.executor.executors;
+package com.github.kayjamlang.executor.executors;
 
 import com.github.kayjamlang.core.containers.ThreadContainer;
 import com.github.kayjamlang.core.provider.Context;

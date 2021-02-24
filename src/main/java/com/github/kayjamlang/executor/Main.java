@@ -1,4 +1,4 @@
-package com.github.kayjam.executor;
+package com.github.kayjamlang.executor;
 
 import com.github.kayjamlang.core.KayJamLexer;
 import com.github.kayjamlang.core.KayJamParser;

@@ -1,4 +1,4 @@
-package com.github.kayjam.executor.executors;
+package com.github.kayjamlang.executor.executors;
 
 import com.github.kayjamlang.core.Type;
 import com.github.kayjamlang.core.containers.Function;
@@ -6,7 +6,7 @@ import com.github.kayjamlang.core.expressions.Return;
 import com.github.kayjamlang.core.provider.Context;
 import com.github.kayjamlang.core.provider.ExpressionProvider;
 import com.github.kayjamlang.core.provider.MainExpressionProvider;
-import com.github.kayjam.executor.exceptions.KayJamRuntimeException;
+import com.github.kayjamlang.executor.exceptions.KayJamRuntimeException;
 
 public class ReturnExecutor extends ExpressionProvider<Return, Object> {
 

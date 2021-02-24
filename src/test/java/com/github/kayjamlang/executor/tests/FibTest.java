@@ -1,9 +1,9 @@
-package com.github.kayjam.executor.tests;
+package com.github.kayjamlang.executor.tests;
 
 import com.github.kayjamlang.core.KayJamLexer;
 import com.github.kayjamlang.core.KayJamParser;
 import com.github.kayjamlang.core.containers.Container;
-import com.github.kayjam.executor.Executor;
+import com.github.kayjamlang.executor.Executor;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.BeforeClass;

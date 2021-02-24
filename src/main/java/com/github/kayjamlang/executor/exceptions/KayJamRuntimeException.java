@@ -1,4 +1,4 @@
-package com.github.kayjam.executor.exceptions;
+package com.github.kayjamlang.executor.exceptions;
 
 import com.github.kayjamlang.core.Expression;
 

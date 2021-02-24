@@ -1,4 +1,4 @@
-package com.github.kayjam.executor;
+package com.github.kayjamlang.executor;
 
 import com.github.kayjamlang.core.Type;
 import com.github.kayjamlang.core.containers.Function;
