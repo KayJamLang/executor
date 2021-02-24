@@ -4,7 +4,7 @@ plugins {
     id "signing"
 }
 
-group 'com.github.kayjam'
+group 'com.github.kayjamlang'
 archivesBaseName = "executor"
 version '0.1'
 
