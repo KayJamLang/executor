@@ -61,6 +61,14 @@ public class Executor extends MainExpressionProvider<Object, Context, MainContex
         return execute((Container) parser.readExpression());
     }
 
+    public Object executeWithOldContext(String code) throws Exception {
+        if(!code.startsWith("{")||!code.endsWith("}"))
+            code = "{"+code+"}";
+
+        KayJamParser parser = new KayJamParser(new KayJamLexer(code));
+        return executeWithOldContext((Container) parser.readExpression());
+    }
+
     public Object execute(Container container) throws Exception {
         mainContext = new MainContext(container, null);
         for(Library library: libraries){
@@ -69,6 +77,10 @@ public class Executor extends MainExpressionProvider<Object, Context, MainContex
         }
 
 
+        return executeWithOldContext(container);
+    }
+
+    public Object executeWithOldContext(Container container) throws Exception {
         boolean useEnded = false;
         for(Expression expression: container.children) {
             if(expression instanceof Use){
@@ -97,7 +109,7 @@ public class Executor extends MainExpressionProvider<Object, Context, MainContex
 
                 for(Expression classExpression: classContainer.children)
                     if(!classExpression.getClass().equals(Variable.class)&&
-                        !(classExpression instanceof ConstructorContainer))
+                            !(classExpression instanceof ConstructorContainer))
                         throw new KayJamRuntimeException(
                                 classExpression, "The class can only contain variables and functions");
 
@@ -136,7 +148,7 @@ public class Executor extends MainExpressionProvider<Object, Context, MainContex
 
 
         return provide(container,
-            mainContext, mainContext);
+                mainContext, mainContext);
     }
 
     private Executor handleUse(Expression expression) throws KayJamRuntimeException {
