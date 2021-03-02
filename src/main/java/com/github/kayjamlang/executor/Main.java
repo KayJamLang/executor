@@ -3,14 +3,17 @@ package com.github.kayjamlang.executor;
 import com.github.kayjamlang.core.KayJamLexer;
 import com.github.kayjamlang.core.KayJamParser;
 import com.github.kayjamlang.core.containers.Container;
+import com.github.kayjamlang.executor.libs.main.MainLibrary;
 
 public class Main {
 
     public static void main(String[] args) throws Exception {
         KayJamLexer lexer = new KayJamLexer("{\n" +
-                "var array = [\"Can\",\"you\",\"buy\",\"?\"];\n" +
-                "println(String::join(array, \" \"));"+
-                "}\n");
+                "" +
+                "while(true){" +
+                "var test=\"test\";" +
+                "println(test);" +
+                "}");
         KayJamParser parser = new KayJamParser(lexer);
 
         Executor executor = new Executor();

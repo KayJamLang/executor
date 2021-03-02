@@ -9,8 +9,8 @@ import com.github.kayjamlang.core.expressions.Const;
 import com.github.kayjamlang.core.expressions.Return;
 import com.github.kayjamlang.core.expressions.Variable;
 import com.github.kayjamlang.core.opcodes.AccessIdentifier;
-import com.github.kayjamlang.core.provider.Context;
-import com.github.kayjamlang.core.provider.MainContext;
+import com.github.kayjamlang.executor.Context;
+import com.github.kayjamlang.executor.MainContext;
 import com.github.kayjamlang.executor.exceptions.KayJamRuntimeException;
 
 import java.util.*;
@@ -33,7 +33,8 @@ public class Library {
         public LibObject(ObjectBind binder) {
             super(new ArrayList<>(), AccessIdentifier.NONE, 0);
 
-            binder.bind(this);
+            if(binder!=null)
+                binder.bind(this);
         }
 
         public void addFunction(LibFunction function){
@@ -56,7 +57,8 @@ public class Library {
             super(name, null, new ArrayList<>(), new ArrayList<>(),
                     AccessIdentifier.NONE, 0);
 
-            binder.bind(this);
+            if(binder!=null)
+                binder.bind(this);
         }
 
         public void setCompanion(LibObject object){
@@ -87,7 +89,7 @@ public class Library {
         }
 
         public interface Code {
-            Object execute(MainContext mainContext, Context context) throws KayJamRuntimeException;
+            Object execute(MainContext mainContext, Context context) throws KayJamRuntimeException, InterruptedException;
         }
     }
 }

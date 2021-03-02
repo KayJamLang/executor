@@ -1,17 +1,18 @@
 package com.github.kayjamlang.executor.executors;
 
+import com.github.kayjamlang.core.Range;
 import com.github.kayjamlang.core.expressions.OperationExpression;
-import com.github.kayjamlang.core.provider.Context;
-import com.github.kayjamlang.core.provider.ExpressionProvider;
 import com.github.kayjamlang.core.provider.MainExpressionProvider;
+import com.github.kayjamlang.executor.Context;
+import com.github.kayjamlang.executor.MainContext;
 import com.github.kayjamlang.executor.exceptions.KayJamRuntimeException;
 
 import java.util.Objects;
 
-public class OperationExpressionExecutor extends ExpressionProvider<OperationExpression, Object> {
+public class OperationExpressionExecutor extends ExpressionExecutor<OperationExpression> {
 
     @Override
-    public Object provide(MainExpressionProvider<Object> mainProvider,
+    public Object provide(MainExpressionProvider<Object, Context, MainContext> mainProvider,
                           Context context,
                           Context argsContext,
                           OperationExpression expression) throws Exception {
@@ -86,6 +87,17 @@ public class OperationExpressionExecutor extends ExpressionProvider<OperationExp
                 case AND:
                     if(left instanceof Boolean&&right instanceof Boolean)
                         return ((Boolean) left)&&((Boolean) right);
+
+                    break;
+
+                case RANGE:
+                    if(left instanceof Number&&right instanceof Number) {
+                        long primaryValue = ((Number) left).longValue();
+                        long secondaryValue = ((Number) right).longValue();
+
+                        return new Range(primaryValue, secondaryValue, (long)
+                                (primaryValue>secondaryValue?-1:1));
+                    }
 
                     break;
             }

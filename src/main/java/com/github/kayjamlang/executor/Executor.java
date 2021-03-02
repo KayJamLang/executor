@@ -5,8 +5,6 @@ import com.github.kayjamlang.core.KayJamLexer;
 import com.github.kayjamlang.core.KayJamParser;
 import com.github.kayjamlang.core.containers.*;
 import com.github.kayjamlang.core.expressions.*;
-import com.github.kayjamlang.core.provider.Context;
-import com.github.kayjamlang.core.provider.MainContext;
 import com.github.kayjamlang.core.provider.MainExpressionProvider;
 import com.github.kayjamlang.executor.exceptions.KayJamNotFoundException;
 import com.github.kayjamlang.executor.exceptions.KayJamRuntimeException;
@@ -17,9 +15,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-public class Executor extends MainExpressionProvider<Object> {
+public class Executor extends MainExpressionProvider<Object, Context, MainContext> {
 
     private final List<Library> libraries = new ArrayList<>();
+    private UseGetFile useGetFileListener;
 
     public Executor() {
         super(null);
@@ -46,14 +45,18 @@ public class Executor extends MainExpressionProvider<Object> {
         addCompiler(If.class, new IfExecutor());
         addCompiler(CallCreate.class, new CallCreateExecutor());
         addCompiler(OperationExpression.class, new OperationExpressionExecutor());
+        addCompiler(WhileExpression.class, new WhileExpressionExecutor());
+        addCompiler(ForExpression.class, new ForExpressionExecutor());
     }
 
-    public Executor addLibrary(Library library){
+    public void addLibrary(Library library){
         libraries.add(library);
-        return this;
     }
 
     public Object execute(String code) throws Exception {
+        if(!code.startsWith("{")||!code.endsWith("}"))
+            code = "{"+code+"}";
+
         KayJamParser parser = new KayJamParser(new KayJamLexer(code));
         return execute((Container) parser.readExpression());
     }
@@ -65,7 +68,27 @@ public class Executor extends MainExpressionProvider<Object> {
             container.functions.addAll(library.functions);
         }
 
+
+        boolean useEnded = false;
         for(Expression expression: container.children) {
+            if(expression instanceof Use){
+                if(!useEnded) {
+                    if (useGetFileListener == null)
+                        throw new KayJamRuntimeException(expression,
+                                "Use expression unsupported");
+
+                    Use use = (Use) expression;
+                    Executor executor = handleUse(use);
+                    if(executor.mainContext==null)
+                        throw new KayJamRuntimeException(expression,
+                                "Unknown error");
+
+                    mainContext.classes.putAll(executor.mainContext.classes);
+                }else throw new KayJamRuntimeException(expression,
+                        "The use statements must be at the beginning of the file");
+            }else if(!useEnded)
+                useEnded = true;
+
             if (expression instanceof ClassContainer) {
                 ClassContainer classContainer = (ClassContainer) expression;
                 if (mainContext.classes.containsKey(classContainer.name))
@@ -116,6 +139,18 @@ public class Executor extends MainExpressionProvider<Object> {
             mainContext, mainContext);
     }
 
+    private Executor handleUse(Expression expression) throws KayJamRuntimeException {
+        if(expression instanceof Array){
+            Array array = (Array) expression;
+            for(Expression value: array.values)
+                return handleUse(value);
+        }else if(expression instanceof Const){
+            return useGetFileListener.getFile(((Const) expression).value.toString());
+        }
+
+        throw new KayJamRuntimeException(expression, "Expected array or string value");
+    }
+
     private Function findFunction(ClassContainer classContainer, Function function) throws KayJamRuntimeException {
         for(Function fun: classContainer.functions){
             if(fun.arguments.size()==function.arguments.size()&&
@@ -138,5 +173,14 @@ public class Executor extends MainExpressionProvider<Object> {
 
         throw new KayJamRuntimeException(classContainer,
                 "Function "+function.name+" not found from implements class");
+    }
+
+    public Executor setUseGetFileListener(UseGetFile useGetFileListener) {
+        this.useGetFileListener = useGetFileListener;
+        return this;
+    }
+
+    public interface UseGetFile{
+        Executor getFile(String path);
     }
 }

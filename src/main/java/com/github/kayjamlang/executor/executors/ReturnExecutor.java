@@ -3,15 +3,15 @@ package com.github.kayjamlang.executor.executors;
 import com.github.kayjamlang.core.Type;
 import com.github.kayjamlang.core.containers.Function;
 import com.github.kayjamlang.core.expressions.Return;
-import com.github.kayjamlang.core.provider.Context;
-import com.github.kayjamlang.core.provider.ExpressionProvider;
 import com.github.kayjamlang.core.provider.MainExpressionProvider;
+import com.github.kayjamlang.executor.Context;
+import com.github.kayjamlang.executor.MainContext;
 import com.github.kayjamlang.executor.exceptions.KayJamRuntimeException;
 
-public class ReturnExecutor extends ExpressionProvider<Return, Object> {
+public class ReturnExecutor extends ExpressionExecutor<Return> {
 
     @Override
-    public Object provide(MainExpressionProvider<Object> mainProvider,
+    public Object provide(MainExpressionProvider<Object, Context, MainContext> mainProvider,
                           Context context, Context argsContext, Return expression) throws Exception {
         Object value = mainProvider.provide(expression.expression, context, argsContext);
         if(context.parent instanceof Function){

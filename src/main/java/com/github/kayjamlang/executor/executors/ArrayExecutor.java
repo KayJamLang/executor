@@ -2,17 +2,17 @@ package com.github.kayjamlang.executor.executors;
 
 import com.github.kayjamlang.core.Expression;
 import com.github.kayjamlang.core.expressions.Array;
-import com.github.kayjamlang.core.provider.Context;
-import com.github.kayjamlang.core.provider.ExpressionProvider;
 import com.github.kayjamlang.core.provider.MainExpressionProvider;
+import com.github.kayjamlang.executor.Context;
+import com.github.kayjamlang.executor.MainContext;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class ArrayExecutor extends ExpressionProvider<Array, Object> {
+public class ArrayExecutor extends ExpressionExecutor<Array> {
 
     @Override
-    public Object provide(MainExpressionProvider<Object> mainProvider,
+    public Object provide(MainExpressionProvider<Object, Context, MainContext> mainProvider,
                           Context context,
                           Context argsContext,
                           Array expression) throws Exception {
