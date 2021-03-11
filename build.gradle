@@ -61,8 +61,8 @@ publishing {
         maven {
             url 'https://oss.sonatype.org/service/local/staging/deploy/maven2/'
             credentials {
-                username sonatypeUsername
-                password sonatypePassword
+                username = project.findProperty('sonatypeUsername') ?: System.getenv('sonatypeUsername')
+                password = project.findProperty('sonatypePassword') ?: System.getenv('sonatypePassword')
             }
         }
 
@@ -70,8 +70,8 @@ publishing {
             name = "GitHubPackages"
             url = uri("https://maven.pkg.github.com/KayJamLang/"+project.archivesBaseName)
             credentials {
-                username = githubUsername
-                password = githubKey
+                username = project.findProperty('githubUsername') ?: System.getenv('githubUsername')
+                password = project.findProperty('githubKey') ?: System.getenv('githubKey')
             }
         }
     }

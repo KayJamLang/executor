@@ -9,10 +9,10 @@ public class Main {
 
     public static void main(String[] args) throws Exception {
         KayJamLexer lexer = new KayJamLexer("{\n" +
-                "" +
+                "var i = 0;" +
                 "while(true){" +
-                "var test=\"test\";" +
-                "println(test);" +
+                "println(i);" +
+                "i = i+1;" +
                 "}");
         KayJamParser parser = new KayJamParser(lexer);
 

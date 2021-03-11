@@ -15,6 +15,7 @@ public class ContainerExecutor extends ExpressionExecutor<Container> {
                           Context context,
                           Context argsContext,
                           Container container) throws Exception {
+        
         for(Expression expression: container.children){
             Object returnValue = mainProvider.provide(expression, context, argsContext);
             if(returnValue!=null&&

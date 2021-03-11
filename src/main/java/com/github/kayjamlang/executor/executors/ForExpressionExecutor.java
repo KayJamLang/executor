@@ -19,8 +19,8 @@ public class ForExpressionExecutor extends ExpressionExecutor<ForExpression> {
             throw new KayJamRuntimeException(expression.range, "Unknown range expression");
         Range range = (Range) rangeObject;
 
+        Context ctx = new Context(context.parent, context, true);
         for (long i = range.from; i != range.to; i+=range.changeValue) {
-            Context ctx = new Context(context.parent, context, true);
             ctx.variables.put(expression.variableName, i);
 
             Object bodyValue = mainProvider.provide(expression.body, ctx, ctx);

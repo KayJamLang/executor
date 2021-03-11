@@ -53,8 +53,10 @@ public class Context {
             variables.put(name, value);
             return true;
         }else if(useParentVars&&
-                parentContext!=null&&parentContext.variables.containsKey(name))
+                parentContext!=null&&parentContext.variables.containsKey(name)){
+            variables.put(name, value);
             return parentContext.setVariable(name, value);
+        }
 
         return false;
     }
