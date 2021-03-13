@@ -38,7 +38,7 @@ public class Executor extends MainExpressionProvider<Object, Context, MainContex
 
         //Other
         addCompiler(Access.class, new AccessExecutor());
-        addCompiler(ArrayGet.class, new GetExecutor());
+        addCompiler(GetExpression.class, new GetExecutor());
         addCompiler(FunctionRef.class, new FunctionRefExecutor());
         addCompiler(NamedExpression.class, new NamedExpressionExecutor());
         addCompiler(CompanionAccess.class, new CompanionAccessExecutor());
@@ -93,12 +93,12 @@ public class Executor extends MainExpressionProvider<Object, Context, MainContex
                                 "Use expression unsupported");
 
                     Use use = (Use) expression;
-                    Executor executor = handleUse(use);
-                    if(executor.mainContext==null)
+                    Container container1 = handleUse(use);
+                    if(container1==null)
                         throw new KayJamRuntimeException(expression,
                                 "Unknown error");
 
-                    mainContext.classes.putAll(executor.mainContext.classes);
+                    executeWithOldContext(container1);
                 }else throw new KayJamRuntimeException(expression,
                         "The use statements must be at the beginning of the file");
             }else if(!useEnded)
@@ -154,7 +154,7 @@ public class Executor extends MainExpressionProvider<Object, Context, MainContex
                 mainContext, mainContext);
     }
 
-    private Executor handleUse(Expression expression) throws KayJamRuntimeException {
+    private Container handleUse(Expression expression) throws KayJamRuntimeException {
         if(expression instanceof Array){
             Array array = (Array) expression;
             for(Expression value: array.values)
@@ -196,6 +196,6 @@ public class Executor extends MainExpressionProvider<Object, Context, MainContex
     }
 
     public interface UseGetFile{
-        Executor getFile(String path);
+        Container getFile(String path);
     }
 }
