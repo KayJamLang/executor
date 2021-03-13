@@ -2,6 +2,7 @@ package com.github.kayjamlang.executor.libs.main;
 
 import com.github.kayjamlang.core.Type;
 import com.github.kayjamlang.core.containers.Function;
+import com.github.kayjamlang.executor.LibraryUtils;
 import com.github.kayjamlang.executor.libs.Library;
 
 import java.util.List;
@@ -49,6 +50,15 @@ public class StringClass extends Library.LibClass {
                 return result.substring(0, result.length()-1);
             }, new Function.Argument(Type.ARRAY, "strings"),
                     new Function.Argument(Type.ANY, "delimiter")));
+
+            //PregMatch
+            addFunction(new Library.LibFunction("matches", (mainContext, context) -> {
+                String pattern = (String) context.variables.get("pattern");
+                String content = (String) context.variables.get("content");
+
+                return content.matches(pattern);
+            }, new Function.Argument(Type.STRING, "pattern"),
+                    new Function.Argument(Type.STRING, "content")));
         }
     }
 }

@@ -4,6 +4,7 @@ import com.github.kayjamlang.core.KayJamLexer;
 import com.github.kayjamlang.core.KayJamParser;
 import com.github.kayjamlang.core.containers.Container;
 import com.github.kayjamlang.executor.Executor;
+import com.github.kayjamlang.executor.libs.main.MainLibrary;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.BeforeClass;
@@ -11,40 +12,29 @@ import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
 
-public class FibExecuteTest {
+public class WhileTest {
 
     private static Executor executor;
     private static Container container;
-    private long start;
 
     @BeforeClass
     public static void init() throws Exception {
         KayJamLexer lexer = new KayJamLexer("{\n" +
-                "fun fib(int x): int {\n" +
-                "   return if(x<3) 1 else\n" +
-                "       fib(x-1)+fib(x-2);\n" +
-                "}\n" +
-                "return fib(10);\n"+
+                "var test = 0;" +
+                "while(test<10){" +
+                "test = test+1;" +
+                "var tt = 1;" +
+                "}\n"+
                 "}\n");
         KayJamParser parser = new KayJamParser(lexer);
         executor = new Executor();
+        executor.addLibrary(new MainLibrary());
 
         container = (Container) parser.readExpression();
     }
 
-    @Before
-    public void initTime(){
-        start = System.currentTimeMillis();
-    }
-
-    @Test(timeout = 90)
+    @Test
     public void test() throws Exception {
-        assertEquals(55L, executor.execute(container));
-    }
-
-    @After
-    public void end(){
-        long end = System.currentTimeMillis();
-        System.out.println("Fib number without Parser: "+(end-start)+" ms");
+        executor.execute(container);
     }
 }

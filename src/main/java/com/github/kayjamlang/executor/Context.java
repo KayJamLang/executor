@@ -27,6 +27,12 @@ public class Context {
             variables.putAll(parentContext.variables);
     }
 
+    public void clearVariables(){
+        variables.clear();
+        if(parentContext!=null&&useParentVars)
+            variables.putAll(parentContext.variables);
+    }
+
     public Context(Container parent, Context parentContext) {
         this(parent, parentContext, true);
     }
@@ -49,13 +55,13 @@ public class Context {
     }
 
     public boolean setVariable(String name, Object value){
-        if(variables.containsKey(name)) {
-            variables.put(name, value);
-            return true;
-        }else if(useParentVars&&
+        if(useParentVars&&
                 parentContext!=null&&parentContext.variables.containsKey(name)){
             variables.put(name, value);
             return parentContext.setVariable(name, value);
+        }else if(variables.containsKey(name)) {
+            variables.put(name, value);
+            return true;
         }
 
         return false;

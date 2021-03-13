@@ -43,6 +43,6 @@ public class FibTest {
     @After
     public void end(){
         long end = System.currentTimeMillis();
-        System.out.println("Fib number: "+(end-start)+" ms");
+        System.out.println("Fib number with Parser: "+(end-start)+" ms");
     }
 }

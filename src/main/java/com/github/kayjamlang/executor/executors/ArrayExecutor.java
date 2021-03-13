@@ -5,8 +5,10 @@ import com.github.kayjamlang.core.expressions.Array;
 import com.github.kayjamlang.core.provider.MainExpressionProvider;
 import com.github.kayjamlang.executor.Context;
 import com.github.kayjamlang.executor.MainContext;
+import com.github.kayjamlang.executor.libs.main.ArrayClass;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 public class ArrayExecutor extends ExpressionExecutor<Array> {
@@ -16,10 +18,10 @@ public class ArrayExecutor extends ExpressionExecutor<Array> {
                           Context context,
                           Context argsContext,
                           Array expression) throws Exception {
-        List<Object> array = new ArrayList<>();
+        ArrayClass arrayClass = new ArrayClass();
         for(Expression item: expression.values)
-            array.add(mainProvider.provide(item, context, argsContext));
+            arrayClass.array.add(mainProvider.provide(item, context, argsContext));
 
-        return array;
+        return arrayClass;
     }
 }

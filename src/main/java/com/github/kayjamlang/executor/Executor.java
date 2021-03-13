@@ -21,7 +21,7 @@ public class Executor extends MainExpressionProvider<Object, Context, MainContex
     private UseGetFile useGetFileListener;
 
     public Executor() {
-        super(null);
+        super(false);
 
         //Containers
         addCompiler(Container.class, new ContainerExecutor());
@@ -38,6 +38,9 @@ public class Executor extends MainExpressionProvider<Object, Context, MainContex
 
         //Other
         addCompiler(Access.class, new AccessExecutor());
+        addCompiler(ArrayGet.class, new GetExecutor());
+        addCompiler(FunctionRef.class, new FunctionRefExecutor());
+        addCompiler(NamedExpression.class, new NamedExpressionExecutor());
         addCompiler(CompanionAccess.class, new CompanionAccessExecutor());
         addCompiler(Const.class, new ConstExecutor());
         addCompiler(Array.class, new ArrayExecutor());
@@ -70,7 +73,7 @@ public class Executor extends MainExpressionProvider<Object, Context, MainContex
     }
 
     public Object execute(Container container) throws Exception {
-        mainContext = new MainContext(container, null);
+        mainContext = new MainContext(this, container, null);
         for(Library library: libraries){
             mainContext.classes.putAll(library.classes);
             container.functions.addAll(library.functions);

@@ -3,6 +3,7 @@ package com.github.kayjamlang.executor;
 import com.github.kayjamlang.core.Type;
 import com.github.kayjamlang.core.containers.Function;
 import com.github.kayjamlang.core.containers.ObjectContainer;
+import com.github.kayjamlang.core.expressions.FunctionRef;
 
 import java.util.List;
 
@@ -19,12 +20,37 @@ public class TypeUtils {
         return true;
     }
 
+    public static Type getType(Class<?> clazz){
+        return isNumber(clazz)?
+                Type.INTEGER:
+                Type.getType(clazz);
+    }
+
+    public static boolean isNumber(Class<?> clazz){
+        switch (clazz.getSimpleName()){
+            case "int":
+            case "short":
+            case "long":
+            case "float":
+            case "double":
+                return true;
+        }
+
+        return false;
+    }
+
     public static boolean isAccept(Type type, Object value){
+        if(type==Type.ANY)
+            return true;
+
         if(type==Type.OBJECT&&!(value instanceof ObjectContainer))
             return false;
 
-        if(type==Type.ANY)
+        if(type==Type.FUNCTION_REF&&value instanceof FunctionRef)
             return true;
+
+        if(value instanceof Number)
+            return type == Type.INTEGER;
 
         return type.typeClass.equals(value.getClass());
     }

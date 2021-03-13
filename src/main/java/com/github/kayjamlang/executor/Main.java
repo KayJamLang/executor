@@ -8,12 +8,10 @@ import com.github.kayjamlang.executor.libs.main.MainLibrary;
 public class Main {
 
     public static void main(String[] args) throws Exception {
-        KayJamLexer lexer = new KayJamLexer("{\n" +
-                "var i = 0;" +
-                "while(true){" +
-                "println(i);" +
-                "i = i+1;" +
-                "}");
+        KayJamLexer lexer = new KayJamLexer(
+                "{\n" +
+                        "return getKayJamVersion();\n" +
+                        "}");
         KayJamParser parser = new KayJamParser(lexer);
 
         Executor executor = new Executor();

@@ -6,6 +6,7 @@ import com.github.kayjamlang.core.containers.ConstructorContainer;
 import com.github.kayjamlang.core.containers.Function;
 import com.github.kayjamlang.core.containers.ObjectContainer;
 import com.github.kayjamlang.core.expressions.CallCreate;
+import com.github.kayjamlang.core.expressions.FunctionRef;
 import com.github.kayjamlang.core.opcodes.AccessIdentifier;
 import com.github.kayjamlang.core.provider.MainExpressionProvider;
 import com.github.kayjamlang.executor.Context;
@@ -24,6 +25,25 @@ public class CallCreateExecutor extends ExpressionExecutor<CallCreate> {
         List<Object> objects = new ArrayList<>();
         for(Expression arg: expression.arguments)
             objects.add(mainProvider.provide(arg, argsContext, argsContext));
+
+        if(context.variables.containsKey(expression.functionName)&&
+                context.variables.get(expression.functionName) instanceof FunctionRef){
+            FunctionRef functionRef = (FunctionRef)
+                    context.variables.get(expression.functionName);
+            if(objects.size()==functionRef.arguments.size()){
+                Context functionContext = new Context(context.parent,
+                        context, false);
+                for (int argNum = 0; argNum < functionRef.arguments.size(); argNum++) {
+                    functionContext.variables.put(
+                            functionRef.arguments.get(argNum),
+                            objects.get(argNum)
+                    );
+                }
+
+                return mainProvider.provide(functionRef.expression, functionContext,
+                        functionContext);
+            }
+        }
 
         if(mainProvider.mainContext.classes.containsKey(expression.functionName)){
             ClassContainer classContainer =

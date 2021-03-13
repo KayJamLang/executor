@@ -15,6 +15,7 @@ public class WhileExpressionExecutor extends ExpressionExecutor<WhileExpression>
 
         Context ctx = new Context(context.parent, context, true);
         while (true){
+            ctx.clearVariables();
             Object condition = mainProvider.provide(expression.condition, ctx, ctx);
             if(condition instanceof Boolean&&!(Boolean) condition)
                 break;

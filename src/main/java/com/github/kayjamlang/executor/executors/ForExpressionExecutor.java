@@ -21,6 +21,7 @@ public class ForExpressionExecutor extends ExpressionExecutor<ForExpression> {
 
         Context ctx = new Context(context.parent, context, true);
         for (long i = range.from; i != range.to; i+=range.changeValue) {
+            ctx.clearVariables();
             ctx.variables.put(expression.variableName, i);
 
             Object bodyValue = mainProvider.provide(expression.body, ctx, ctx);
