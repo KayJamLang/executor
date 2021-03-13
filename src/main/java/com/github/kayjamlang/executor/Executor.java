@@ -93,7 +93,7 @@ public class Executor extends MainExpressionProvider<Object, Context, MainContex
                                 "Use expression unsupported");
 
                     Use use = (Use) expression;
-                    Container container1 = handleUse(use);
+                    Container container1 = handleUse(use.expression);
                     if(container1==null)
                         throw new KayJamRuntimeException(expression,
                                 "Unknown error");
