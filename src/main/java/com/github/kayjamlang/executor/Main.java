@@ -10,7 +10,7 @@ public class Main {
     public static void main(String[] args) throws Exception {
         KayJamLexer lexer = new KayJamLexer(
                 "{\n" +
-                        "return getKayJamVersion();\n" +
+                        "return println(123);\n" +
                         "}");
         KayJamParser parser = new KayJamParser(lexer);
 

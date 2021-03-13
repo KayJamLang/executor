@@ -28,12 +28,12 @@ public class MainLibrary extends Library {
     public MainLibrary(Output output) throws Exception {
         functions.add(new LibFunction("println", (mainContext, context) -> {
             output.println(context.variables.get("value"));
-            return null;
+            return false;
         }, new Function.Argument(Type.ANY, "value")));
 
         functions.add(new LibFunction("print", (mainContext, context) -> {
             output.print(context.variables.get("value"));
-            return null;
+            return false;
         }, new Function.Argument(Type.ANY, "value")));
 
         functions.add(new LibNamedFunction("thread", (mainContext, context, expression) -> new Thread(()->{

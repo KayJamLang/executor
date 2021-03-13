@@ -21,7 +21,7 @@ public class Executor extends MainExpressionProvider<Object, Context, MainContex
     private UseGetFile useGetFileListener;
 
     public Executor() {
-        super(false);
+        super(null);
 
         //Containers
         addCompiler(Container.class, new ContainerExecutor());
