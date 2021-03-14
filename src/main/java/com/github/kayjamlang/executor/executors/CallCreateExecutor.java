@@ -83,7 +83,7 @@ public class CallCreateExecutor extends ExpressionExecutor<CallCreate> {
 
             if(constructorContainer!=null){
                 Context constructorClass =
-                        new Context(constructorContainer, classContext, false);
+                        new Context(constructorContainer, classContext, true);
                 constructorClass.variables.put("this", classContainer);
                 classContainer.data.put("ctx", classContext);
 
@@ -108,7 +108,7 @@ public class CallCreateExecutor extends ExpressionExecutor<CallCreate> {
 
         Function function = (Function) context.findFunction(expression, expression.functionName, objects)
                 .clone();
-        Context functionContext = new Context(function, context, false);
+        Context functionContext = new Context(function, context, context.parent instanceof ObjectContainer);
         if(context.parent instanceof ObjectContainer)
             functionContext.variables.put("this", context.parent);
 

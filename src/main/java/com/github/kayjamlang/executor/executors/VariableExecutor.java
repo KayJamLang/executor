@@ -18,7 +18,7 @@ public class VariableExecutor extends ExpressionExecutor<Variable> {
             throw new KayJamRuntimeException(expression, "Variable already set");
 
 
-        Object value = mainProvider.provide(expression.expression, context, argsContext);
+        Object value = mainProvider.provide(expression.expression, argsContext, argsContext);
         context.variables.put(expression.name, value);
 
         return value;
