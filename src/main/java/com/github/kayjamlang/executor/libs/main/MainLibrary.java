@@ -1,5 +1,6 @@
 package com.github.kayjamlang.executor.libs.main;
 
+import com.github.kayjamlang.core.Argument;
 import com.github.kayjamlang.core.KayJamVersion;
 import com.github.kayjamlang.core.Type;
 import com.github.kayjamlang.core.containers.Function;
@@ -29,12 +30,12 @@ public class MainLibrary extends Library {
         functions.add(new LibFunction("println", (mainContext, context) -> {
             output.println(context.variables.get("value"));
             return false;
-        }, new Function.Argument(Type.ANY, "value")));
+        }, new Argument(Type.ANY, "value")));
 
         functions.add(new LibFunction("print", (mainContext, context) -> {
             output.print(context.variables.get("value"));
             return false;
-        }, new Function.Argument(Type.ANY, "value")));
+        }, new Argument(Type.ANY, "value")));
 
         functions.add(new LibNamedFunction("thread", (mainContext, context, expression) -> new Thread(()->{
             try {
@@ -65,8 +66,8 @@ public class MainLibrary extends Library {
             }
 
             return arrayClass;
-        }, new Function.Argument(Type.STRING, "pattern"),
-                new Function.Argument(Type.STRING, "string")));
+        }, new Argument(Type.STRING, "pattern"),
+                new Argument(Type.STRING, "string")));
 
         functions.add(new LibFunction("matchAll", (mainContext, context) -> {
             String pattern = (String) context.variables.get("pattern");
@@ -87,8 +88,8 @@ public class MainLibrary extends Library {
             }
 
             return result.array.size()==0?false:result;
-        }, new Function.Argument(Type.STRING, "pattern"),
-                new Function.Argument(Type.STRING, "string")));
+        }, new Argument(Type.STRING, "pattern"),
+                new Argument(Type.STRING, "string")));
 
         functions.add(new LibFunction("getKayJamVersion", (mainContext, context) -> KayJamVersion.VERSION_CODE));
 

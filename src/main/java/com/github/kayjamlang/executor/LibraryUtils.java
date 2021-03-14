@@ -1,5 +1,6 @@
 package com.github.kayjamlang.executor;
 
+import com.github.kayjamlang.core.Argument;
 import com.github.kayjamlang.core.containers.Function;
 import com.github.kayjamlang.executor.libs.Lib;
 import com.github.kayjamlang.executor.libs.Library;
@@ -14,10 +15,10 @@ public class LibraryUtils {
     public static void importFunctionsFormClass(Lib library, Class<?> clazz){
         for(Method method: clazz.getDeclaredMethods()){
             if(Modifier.isStatic(method.getModifiers())){
-                ArrayList<Function.Argument> arguments = new ArrayList<>();
+                ArrayList<Argument> arguments = new ArrayList<>();
                 for(Parameter parameter:
                         method.getParameters())
-                    arguments.add(new Function.Argument(
+                    arguments.add(new Argument(
                             TypeUtils.getType(parameter.getType()),
                             parameter.getName()));
 

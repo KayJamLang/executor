@@ -1,6 +1,8 @@
 package com.github.kayjamlang.executor;
 
+import com.github.kayjamlang.core.Argument;
 import com.github.kayjamlang.core.Type;
+import com.github.kayjamlang.core.containers.ClassContainer;
 import com.github.kayjamlang.core.containers.Function;
 import com.github.kayjamlang.core.containers.ObjectContainer;
 import com.github.kayjamlang.core.expressions.FunctionRef;
@@ -9,7 +11,7 @@ import java.util.List;
 
 public class TypeUtils {
 
-    public static boolean isAccept(List<Function.Argument> arguments, List<Object> objects){
+    public static boolean isAccept(List<Argument> arguments, List<Object> objects){
         if(arguments.size()!=objects.size())
             return false;
 
@@ -51,6 +53,19 @@ public class TypeUtils {
 
         if(value instanceof Number)
             return type == Type.INTEGER;
+
+        if(value instanceof ClassContainer){
+            ClassContainer classContainer = (ClassContainer) value;
+            while (classContainer!=null){
+                if(classContainer.name.equals(type.name))
+                    return true;
+
+                classContainer = (ClassContainer) classContainer.data
+                        .getOrDefault("extends", null);
+            }
+
+            return false;
+        }
 
         return type.typeClass.equals(value.getClass());
     }

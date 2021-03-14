@@ -1,5 +1,6 @@
 package com.github.kayjamlang.executor.libs.main;
 
+import com.github.kayjamlang.core.Argument;
 import com.github.kayjamlang.core.Type;
 import com.github.kayjamlang.core.containers.Function;
 import com.github.kayjamlang.executor.LibraryUtils;
@@ -16,17 +17,17 @@ public class MapClass extends Library.LibClass {
         addFunction(new Library.LibFunction("put", (mainContext, context) -> {
             map.put(context.variables.get("key"), context.variables.get("value"));
             return MapClass.this;
-        }, new Function.Argument(Type.ANY, "key"),
-                new Function.Argument(Type.ANY, "value")));
+        }, new Argument(Type.ANY, "key"),
+                new Argument(Type.ANY, "value")));
 
         addFunction(new Library.LibFunction("get", (mainContext, context) ->
                 map.getOrDefault(context.variables.get("key"), false),
-                new Function.Argument(Type.ANY, "key")));
+                new Argument(Type.ANY, "key")));
 
         addFunction(new Library.LibFunction("get", (mainContext, context) ->
                 map.getOrDefault(context.variables.get("key"), context.variables.get("defaultValue")),
-                new Function.Argument(Type.ANY, "key"),
-                new Function.Argument(Type.ANY, "defaultValue")));
+                new Argument(Type.ANY, "key"),
+                new Argument(Type.ANY, "defaultValue")));
     }
 
     @Override

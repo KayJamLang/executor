@@ -139,6 +139,14 @@ public class Executor extends MainExpressionProvider<Object, Context, MainContex
                 classContainer.children.addAll(implementsClass.children);
             }
 
+            if(classContainer.extendsClass!=null){
+                if(!mainContext.classes.containsKey(classContainer.extendsClass))
+                    throw new KayJamNotFoundException(classContainer,
+                            "class", classContainer.extendsClass);
+
+                classContainer.data.put("extends", mainContext.classes.get(classContainer.extendsClass));
+            }
+
             if(classContainer.companion!=null){
                 Context ctx = new Context(classContainer.companion, mainContext, false);
                 for(Expression child: classContainer.companion.children){

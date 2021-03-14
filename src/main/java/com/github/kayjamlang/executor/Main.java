@@ -9,8 +9,18 @@ public class Main {
 
     public static void main(String[] args) throws Exception {
         KayJamLexer lexer = new KayJamLexer(
-                "{\n" +
-                        "return println(123);\n" +
+                "{" +
+                        "class A {" +
+                        "fun test(): int{" +
+                        "return 123;" +
+                        "}" +
+                        "}" +
+                        "class B: A {}" +
+                        "test(B());" +
+                        "" +
+                        "fun test(A clazz){" +
+                        "println(clazz.test());" +
+                        "}" +
                         "}");
         KayJamParser parser = new KayJamParser(lexer);
 

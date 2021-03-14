@@ -1,5 +1,6 @@
 package com.github.kayjamlang.executor.libs.main;
 
+import com.github.kayjamlang.core.Argument;
 import com.github.kayjamlang.core.Type;
 import com.github.kayjamlang.core.containers.Function;
 import com.github.kayjamlang.executor.LibraryUtils;
@@ -24,8 +25,8 @@ public class StringClass extends Library.LibClass {
                 String string = (String) context.variables.get("source");
                 Number position = (Number) context.variables.get("position");
                 return String.valueOf(string.charAt(position.intValue()));
-            }, new Function.Argument(Type.STRING, "source"),
-                    new Function.Argument(Type.INTEGER, "position")));
+            }, new Argument(Type.STRING, "source"),
+                    new Argument(Type.INTEGER, "position")));
 
             //Replace
             addFunction(new Library.LibFunction("replace", (mainContext, context) -> {
@@ -34,9 +35,9 @@ public class StringClass extends Library.LibClass {
                 Object replaceValue = context.variables.get("replaceValue");
 
                 return string.replaceAll(search.toString(), replaceValue.toString());
-            }, new Function.Argument(Type.STRING, "source"),
-                    new Function.Argument(Type.ANY, "search"),
-                    new Function.Argument(Type.ANY, "replaceValue")));
+            }, new Argument(Type.STRING, "source"),
+                    new Argument(Type.ANY, "search"),
+                    new Argument(Type.ANY, "replaceValue")));
 
             //Join
             addFunction(new Library.LibFunction("join", (mainContext, context) -> {
@@ -48,8 +49,8 @@ public class StringClass extends Library.LibClass {
                     result.append(obj).append(delimiter);
 
                 return result.substring(0, result.length()-1);
-            }, new Function.Argument(Type.ARRAY, "strings"),
-                    new Function.Argument(Type.ANY, "delimiter")));
+            }, new Argument(Type.ARRAY, "strings"),
+                    new Argument(Type.ANY, "delimiter")));
 
             //PregMatch
             addFunction(new Library.LibFunction("matches", (mainContext, context) -> {
@@ -57,8 +58,8 @@ public class StringClass extends Library.LibClass {
                 String content = (String) context.variables.get("content");
 
                 return content.matches(pattern);
-            }, new Function.Argument(Type.STRING, "pattern"),
-                    new Function.Argument(Type.STRING, "content")));
+            }, new Argument(Type.STRING, "pattern"),
+                    new Argument(Type.STRING, "content")));
         }
     }
 }

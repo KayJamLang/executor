@@ -11,6 +11,7 @@ import com.github.kayjamlang.core.opcodes.AccessIdentifier;
 import com.github.kayjamlang.core.provider.MainExpressionProvider;
 import com.github.kayjamlang.executor.Context;
 import com.github.kayjamlang.executor.MainContext;
+import com.github.kayjamlang.executor.TypeUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,12 +31,13 @@ public class CallCreateExecutor extends ExpressionExecutor<CallCreate> {
                 context.variables.get(expression.functionName) instanceof FunctionRef){
             FunctionRef functionRef = (FunctionRef)
                     context.variables.get(expression.functionName);
-            if(objects.size()==functionRef.arguments.size()){
+            if(objects.size()==functionRef.arguments.size()&&
+                    TypeUtils.isAccept(functionRef.arguments, objects)){
                 Context functionContext = new Context(context.parent,
                         context, false);
                 for (int argNum = 0; argNum < functionRef.arguments.size(); argNum++) {
                     functionContext.variables.put(
-                            functionRef.arguments.get(argNum),
+                            functionRef.arguments.get(argNum).name,
                             objects.get(argNum)
                     );
                 }
@@ -51,13 +53,28 @@ public class CallCreateExecutor extends ExpressionExecutor<CallCreate> {
                             .clone();
             Context classContext = new Context(classContainer, context, false);
 
+            ClassContainer extendsClass = (ClassContainer)
+                    classContainer.data.getOrDefault("extends", null);
+
+            while (extendsClass!=null){
+                extendsClass = (ClassContainer) extendsClass.clone();
+
+                classContainer.children.addAll(extendsClass.children);
+                classContainer.constructors.addAll(extendsClass.constructors);
+                classContainer.functions.addAll(extendsClass.functions);
+
+                extendsClass = (ClassContainer)
+                        extendsClass.data.getOrDefault("extends", null);
+            }
+
             ConstructorContainer constructorContainer = null;
             if(classContainer.constructors.size()==0&&expression.arguments.size()==0){
                 constructorContainer = new ConstructorContainer(new ArrayList<>(),
                         new ArrayList<>(), AccessIdentifier.NONE, 0);
             }else{
                 for (ConstructorContainer constructor : classContainer.constructors) {
-                    if (constructor.arguments.size()==expression.arguments.size()) {
+                    if (constructor.arguments.size()==expression.arguments.size()&&
+                            TypeUtils.isAccept(constructor.arguments, objects)) {
                         constructorContainer = constructor;
                         break;
                     }
@@ -72,7 +89,7 @@ public class CallCreateExecutor extends ExpressionExecutor<CallCreate> {
 
                 for (int argNum = 0; argNum < constructorContainer.arguments.size(); argNum++) {
                     constructorClass.variables.put(
-                            constructorContainer.arguments.get(argNum),
+                            constructorContainer.arguments.get(argNum).name,
                             objects.get(argNum)
                     );
                 }

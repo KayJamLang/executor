@@ -1,22 +1,17 @@
 package com.github.kayjamlang.executor.libs;
 
+import com.github.kayjamlang.core.Argument;
 import com.github.kayjamlang.core.Expression;
 import com.github.kayjamlang.core.Type;
 import com.github.kayjamlang.core.containers.*;
-import com.github.kayjamlang.core.expressions.Annotation;
 import com.github.kayjamlang.core.expressions.Const;
 import com.github.kayjamlang.core.expressions.Return;
 import com.github.kayjamlang.core.expressions.Variable;
 import com.github.kayjamlang.core.opcodes.AccessIdentifier;
 import com.github.kayjamlang.executor.Context;
-import com.github.kayjamlang.executor.Executor;
 import com.github.kayjamlang.executor.MainContext;
-import com.github.kayjamlang.executor.exceptions.KayJamRuntimeException;
 
-import java.lang.reflect.InvocationTargetException;
 import java.util.*;
-
-import static com.github.kayjamlang.executor.libs.Library.*;
 
 public class Library implements Lib {
 
