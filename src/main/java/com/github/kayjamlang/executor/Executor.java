@@ -98,6 +98,7 @@ public class Executor extends MainExpressionProvider<Object, Context, MainContex
                         throw new KayJamRuntimeException(expression,
                                 "Unknown error");
 
+                    mainContext.parent.functions.addAll(container1.functions);
                     executeWithOldContext(container1);
                 }else throw new KayJamRuntimeException(expression,
                         "The use statements must be at the beginning of the file");
