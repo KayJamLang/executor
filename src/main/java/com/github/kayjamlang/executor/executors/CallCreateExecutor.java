@@ -7,6 +7,7 @@ import com.github.kayjamlang.core.containers.Function;
 import com.github.kayjamlang.core.containers.ObjectContainer;
 import com.github.kayjamlang.core.expressions.CallCreate;
 import com.github.kayjamlang.core.expressions.FunctionRef;
+import com.github.kayjamlang.core.expressions.Variable;
 import com.github.kayjamlang.core.opcodes.AccessIdentifier;
 import com.github.kayjamlang.core.provider.MainExpressionProvider;
 import com.github.kayjamlang.executor.Context;
@@ -56,11 +57,19 @@ public class CallCreateExecutor extends ExpressionExecutor<CallCreate> {
             ClassContainer extendsClass = (ClassContainer)
                     classContainer.data.getOrDefault("extends", null);
 
-            while (extendsClass!=null){
-                extendsClass = (ClassContainer) extendsClass.clone();
+            List<String> vars = new ArrayList<>();
+            for(Expression expression1: classContainer.children)
+                if(expression1 instanceof Variable)
+                    vars.add(((Variable) expression1).name);
 
-                classContainer.children.addAll(extendsClass.children);
-                classContainer.constructors.addAll(extendsClass.constructors);
+            while (extendsClass!=null){
+                for(Expression expression1: extendsClass.children)
+                    if(expression1 instanceof Variable)
+                        if(!vars.contains(((Variable) expression1).name)) {
+                            classContainer.children.add(expression1);
+                            vars.add(((Variable) expression1).name);
+                        }
+
                 classContainer.functions.addAll(extendsClass.functions);
 
                 extendsClass = (ClassContainer)
@@ -82,6 +91,10 @@ public class CallCreateExecutor extends ExpressionExecutor<CallCreate> {
             }
 
             if(constructorContainer!=null){
+                classContext.variables.clear();
+                new ContainerExecutor().provide(mainProvider,
+                        classContext, classContext, classContainer);
+
                 Context constructorClass =
                         new Context(constructorContainer, classContext, true);
                 constructorClass.variables.put("this", classContainer);
@@ -95,9 +108,6 @@ public class CallCreateExecutor extends ExpressionExecutor<CallCreate> {
                 }
 
                 new ContainerExecutor().provide(mainProvider,
-                        classContext, classContext, classContainer);
-
-                new ContainerExecutor().provide(mainProvider,
                                 constructorClass,
                                 constructorClass,
                                 constructorContainer);
@@ -108,7 +118,8 @@ public class CallCreateExecutor extends ExpressionExecutor<CallCreate> {
 
         Function function = (Function) context.findFunction(expression, expression.functionName, objects)
                 .clone();
-        Context functionContext = new Context(function, context, context.parent instanceof ObjectContainer);
+        Context functionContext = new Context(function, context,
+                context.parent instanceof ObjectContainer);
         if(context.parent instanceof ObjectContainer)
             functionContext.variables.put("this", context.parent);
 

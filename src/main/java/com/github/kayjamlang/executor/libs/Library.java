@@ -82,8 +82,22 @@ public class Library implements Lib {
             context.variables.put(name, value);
         }
 
+        @SuppressWarnings("unchecked")
+        public <T> T getVariable(String name){
+            return (T) context.variables.get(name);
+        }
+
         public interface ObjectBind {
             void bind(LibObject object);
+        }
+    }
+
+    public static class LibConstructor extends ConstructorContainer{
+
+        public LibConstructor(CodeExecExpression.Code code, Argument... args) {
+            super(Arrays.asList(args),
+                    Collections.singletonList(new CodeExecExpression(code)),
+                    AccessIdentifier.NONE, 0);
         }
     }
 
@@ -97,6 +111,10 @@ public class Library implements Lib {
                 binder.bind(this);
         }
 
+        public void addConstructor(LibConstructor constructor){
+            constructors.add(constructor);
+        }
+
         public void setCompanion(LibObject object){
             companion = object;
         }
@@ -108,6 +126,14 @@ public class Library implements Lib {
         public void addVariable(String name, Object value){
             children.add(new Variable(name, new Const(value, 0),
                     AccessIdentifier.PUBLIC, 0));
+        }
+
+        @SuppressWarnings("unchecked")
+        public <T> T getVariable(Context ctx, String name){
+            if(ctx.parent instanceof ClassContainer)
+                return (T) ctx.variables.get(name);
+
+            return (T) ctx.parentContext.variables.get(name);
         }
 
         public interface ClassBind {

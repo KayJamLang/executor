@@ -4,6 +4,7 @@ import com.github.kayjamlang.core.containers.ClassContainer;
 import com.github.kayjamlang.core.provider.MainExpressionProvider;
 import com.github.kayjamlang.executor.Context;
 import com.github.kayjamlang.executor.MainContext;
+import com.github.kayjamlang.executor.Void;
 import com.github.kayjamlang.executor.exceptions.KayJamRuntimeException;
 
 public class ClassContainerExecutor extends ExpressionExecutor<ClassContainer> {
@@ -16,6 +17,6 @@ public class ClassContainerExecutor extends ExpressionExecutor<ClassContainer> {
         if(!(context instanceof MainContext))
             throw new KayJamRuntimeException(expression, "Class declaration can only be in the main container");
 
-        return null;
+        return Void.INSTANCE;
     }
 }

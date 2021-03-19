@@ -3,22 +3,25 @@ package com.github.kayjamlang.executor;
 import com.github.kayjamlang.core.Expression;
 import com.github.kayjamlang.core.containers.Container;
 import com.github.kayjamlang.core.containers.Function;
-import com.github.kayjamlang.core.containers.ObjectContainer;
 import com.github.kayjamlang.executor.exceptions.KayJamNotFoundException;
-import com.github.kayjamlang.executor.executors.ContainerExecutor;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class Context {
+public class Context implements Cloneable {
+    private static int count = 0;
+
+    public final int id;
     public final Container parent;
     public final Context parentContext;
     public final boolean useParentVars;
     public final Map<String, Object> variables = new HashMap<>();
 
     public Context(Container parent, Context parentContext, boolean useParentVars) {
+        count++;
+
+        this.id = count;
         this.parent = parent;
         this.parentContext = parentContext;
         this.useParentVars = useParentVars;
@@ -65,5 +68,10 @@ public class Context {
         }
 
         return false;
+    }
+
+    @Override
+    public Object clone() throws CloneNotSupportedException {
+        return super.clone();
     }
 }

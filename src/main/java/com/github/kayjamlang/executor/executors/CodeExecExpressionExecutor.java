@@ -3,6 +3,7 @@ package com.github.kayjamlang.executor.executors;
 import com.github.kayjamlang.core.provider.MainExpressionProvider;
 import com.github.kayjamlang.executor.Context;
 import com.github.kayjamlang.executor.MainContext;
+import com.github.kayjamlang.executor.Void;
 import com.github.kayjamlang.executor.exceptions.KayJamRuntimeException;
 import com.github.kayjamlang.executor.libs.Library;
 
@@ -15,6 +16,9 @@ public class CodeExecExpressionExecutor extends ExpressionExecutor<Library.CodeE
                           Context context,
                           Context argsContext,
                           Library.CodeExecExpression expression) throws Exception {
-        return expression.code.execute(mainProvider.mainContext, context);
+        Object result = expression.code.execute(mainProvider.mainContext, context);
+        if(result==null)
+            return Void.INSTANCE;
+        return result;
     }
 }

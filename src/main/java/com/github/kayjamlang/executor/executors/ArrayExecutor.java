@@ -19,8 +19,13 @@ public class ArrayExecutor extends ExpressionExecutor<Array> {
                           Context argsContext,
                           Array expression) throws Exception {
         ArrayClass arrayClass = new ArrayClass();
+        arrayClass.data.put("ctx", new Context(arrayClass, context, false));
+        arrayClass.children.clear();
+
+        List<Object> list = new LinkedList<>();
+        arrayClass.addVariable("array", list);
         for(Expression item: expression.values)
-            arrayClass.array.add(mainProvider.provide(item, context, argsContext));
+            list.add(mainProvider.provide(item, context, argsContext));
 
         return arrayClass;
     }

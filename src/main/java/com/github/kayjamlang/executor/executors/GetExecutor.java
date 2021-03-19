@@ -19,12 +19,17 @@ public class GetExecutor extends ExpressionExecutor<GetExpression> {
         if(root instanceof ArrayClass){
             if(!(index instanceof Number))
                 throw new KayJamRuntimeException(expression.value, "Unknown index value");
-            ArrayClass arrayClass = (ArrayClass) root;
 
-            return arrayClass.get(((Number) index).intValue(), false);
+            ArrayClass arrayClass = (ArrayClass) root;
+            Context ctx = (Context) arrayClass.data.get("ctx");
+
+            return arrayClass.get(ctx,
+                    ((Number) index).intValue(), false);
         }else if(root instanceof MapClass){
             MapClass mapClass = (MapClass) root;
-            return mapClass.map.getOrDefault(index, false);
+            Context ctx = (Context) mapClass.data.get("ctx");
+
+            return mapClass.getMap(ctx).getOrDefault(index, false);
         }
 
         throw new KayJamRuntimeException(expression.root, "unknown type of root");

@@ -5,6 +5,7 @@ import com.github.kayjamlang.core.expressions.ForExpression;
 import com.github.kayjamlang.core.provider.MainExpressionProvider;
 import com.github.kayjamlang.executor.Context;
 import com.github.kayjamlang.executor.MainContext;
+import com.github.kayjamlang.executor.Void;
 import com.github.kayjamlang.executor.exceptions.KayJamRuntimeException;
 
 public class ForExpressionExecutor extends ExpressionExecutor<ForExpression> {
@@ -29,6 +30,6 @@ public class ForExpressionExecutor extends ExpressionExecutor<ForExpression> {
                 return bodyValue;
         }
 
-        return null;
+        return Void.INSTANCE;
     }
 }

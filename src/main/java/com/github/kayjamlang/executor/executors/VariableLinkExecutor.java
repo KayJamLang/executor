@@ -13,7 +13,7 @@ public class VariableLinkExecutor extends ExpressionExecutor<VariableLink> {
                           Context context,
                           Context argsContext,
                           VariableLink expression) throws KayJamNotFoundException {
-        Object result = context.variables.getOrDefault(expression.name, null);
+        Object result = argsContext.variables.getOrDefault(expression.name, null);
 
         if(result==null)
             throw new KayJamNotFoundException(expression, "var", expression.name);

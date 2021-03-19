@@ -4,6 +4,7 @@ import com.github.kayjamlang.core.expressions.WhileExpression;
 import com.github.kayjamlang.core.provider.MainExpressionProvider;
 import com.github.kayjamlang.executor.Context;
 import com.github.kayjamlang.executor.MainContext;
+import com.github.kayjamlang.executor.Void;
 
 public class WhileExpressionExecutor extends ExpressionExecutor<WhileExpression> {
 
@@ -25,6 +26,6 @@ public class WhileExpressionExecutor extends ExpressionExecutor<WhileExpression>
                 return bodyValue;
         }
 
-        return null;
+        return Void.INSTANCE;
     }
 }

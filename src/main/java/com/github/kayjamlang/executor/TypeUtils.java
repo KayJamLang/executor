@@ -23,6 +23,9 @@ public class TypeUtils {
     }
 
     public static Type getType(Class<?> clazz){
+        if(clazz==ClassContainer.class)
+            return Type.OBJECT;
+
         return isNumber(clazz)?
                 Type.INTEGER:
                 Type.getType(clazz);
@@ -45,8 +48,8 @@ public class TypeUtils {
         if(type==Type.ANY)
             return true;
 
-        if(type==Type.OBJECT&&!(value instanceof ObjectContainer))
-            return false;
+        if(type==Type.OBJECT&&value instanceof ObjectContainer)
+            return true;
 
         if(type==Type.FUNCTION_REF&&value instanceof FunctionRef)
             return true;

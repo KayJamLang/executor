@@ -7,6 +7,8 @@ import com.github.kayjamlang.core.containers.Function;
 import com.github.kayjamlang.executor.Context;
 import com.github.kayjamlang.executor.libs.Library;
 
+import java.util.LinkedList;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -60,9 +62,13 @@ public class MainLibrary extends Library {
                 return false;
 
             ArrayClass arrayClass = new ArrayClass();
-            arrayClass.array.add(0, matcher.group(0));
+            arrayClass.children.clear();
+
+            List<Object> array = new LinkedList<>();
+            arrayClass.addVariable("array", array);
+            array.add(0, matcher.group(0));
             for (int i = 0; i < matcher.groupCount(); i++) {
-                arrayClass.array.add(i+1, matcher.group(i+1));
+                array.add(i+1, matcher.group(i+1));
             }
 
             return arrayClass;
@@ -77,17 +83,25 @@ public class MainLibrary extends Library {
                     .matcher(string);
 
             ArrayClass result = new ArrayClass();
+            result.children.clear();
+
+            List<Object> resultArray = new LinkedList<>();
+            result.addVariable("array", resultArray);
             while(matcher.find()) {
                 ArrayClass arrayClass = new ArrayClass();
-                arrayClass.array.add(0, matcher.group(0));
+                arrayClass.children.clear();
+
+                List<Object> array = new LinkedList<>();
+                arrayClass.addVariable("array", array);
+                array.add(0, matcher.group(0));
                 for (int i = 0; i < matcher.groupCount(); i++) {
-                    arrayClass.array.add(i + 1, matcher.group(i + 1));
+                    array.add(i + 1, matcher.group(i + 1));
                 }
 
-                result.array.add(result.array.size(), arrayClass);
+                resultArray.add(resultArray.size(), arrayClass);
             }
 
-            return result.array.size()==0?false:result;
+            return resultArray.size()==0?false:result;
         }, new Argument(Type.STRING, "pattern"),
                 new Argument(Type.STRING, "string")));
 

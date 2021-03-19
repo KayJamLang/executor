@@ -1,5 +1,6 @@
 package com.github.kayjamlang.executor.executors;
 
+import com.github.kayjamlang.core.containers.ClassContainer;
 import com.github.kayjamlang.core.expressions.Variable;
 import com.github.kayjamlang.core.provider.MainExpressionProvider;
 import com.github.kayjamlang.executor.Context;

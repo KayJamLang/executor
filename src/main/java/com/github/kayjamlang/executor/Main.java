@@ -10,17 +10,41 @@ public class Main {
     public static void main(String[] args) throws Exception {
         KayJamLexer lexer = new KayJamLexer(
                 "{" +
-                        "class A {" +
-                        "fun test(): int{" +
-                        "return 123;" +
+                        "class Element {\n" +
+                        "   var name = \"div\";\n" +
+                        "   var children = \"\";\n" +
+                        "   \n" +
+                        "   constructor(name){\n" +
+                        "      this.name = name;\n" +
+                        "   }\n" +
+                        "   \n" +
+                        "   fun addChild(Element element): Element{\n" +
+                        "      this.children = this.children + element.build();\n" +
+                        "      return this;\n" +
+                        "   }\n" +
+                        "   \n" +
+                        "   fun addChild(string element): Element{\n" +
+                        "      this.children = this.children + element;\n" +
+                        "      return this;\n" +
+                        "   }\n" +
+                        "   \n" +
+                        "   fun build(): string{      \n" +
+                        "      return \"<\"+this.name+\">\"+this.children+\"</\"+this.name+\">\";\n" +
+                        "   }\n" +
+                        "}\n" +
+                        "\n" +
+                        "class div: Element {\n" +
+                        "   constructor(){\n" +
+                        "      this.name = \"div\";\n" +
+                        "   }\n" +
                         "}" +
-                        "}" +
-                        "class B: A {}" +
-                        "test(B());" +
                         "" +
-                        "fun test(A clazz){" +
-                        "println(clazz.test());" +
-                        "}" +
+                        "var test = div();\n" +
+                        "test.addChild(\"test\");\n" +
+                        "print(div()\n" +
+                        ".addChild(test)\n" +
+                        ".build());" +
+                        "" +
                         "}");
         KayJamParser parser = new KayJamParser(lexer);
 

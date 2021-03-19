@@ -7,6 +7,7 @@ import com.github.kayjamlang.core.expressions.FunctionRef;
 import com.github.kayjamlang.core.provider.MainExpressionProvider;
 import com.github.kayjamlang.executor.Context;
 import com.github.kayjamlang.executor.MainContext;
+import com.github.kayjamlang.executor.Void;
 import com.github.kayjamlang.executor.exceptions.KayJamNotFoundException;
 import com.github.kayjamlang.executor.exceptions.KayJamRuntimeException;
 
@@ -30,6 +31,6 @@ public class NamedExpressionExecutor extends ExpressionExecutor<NamedExpression>
         new ContainerExecutor()
                 .provide(mainProvider, functionContext, functionContext, function);
 
-        return null;
+        return Void.INSTANCE;
     }
 }

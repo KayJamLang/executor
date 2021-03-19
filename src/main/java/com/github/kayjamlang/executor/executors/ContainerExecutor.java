@@ -7,6 +7,7 @@ import com.github.kayjamlang.core.expressions.Return;
 import com.github.kayjamlang.core.provider.MainExpressionProvider;
 import com.github.kayjamlang.executor.Context;
 import com.github.kayjamlang.executor.MainContext;
+import com.github.kayjamlang.executor.Void;
 
 public class ContainerExecutor extends ExpressionExecutor<Container> {
 
@@ -18,13 +19,12 @@ public class ContainerExecutor extends ExpressionExecutor<Container> {
         
         for(Expression expression: container.children){
             Object returnValue = mainProvider.provide(expression, context, argsContext);
-            if(returnValue!=null&&
-                    (expression instanceof Return||
-                    expression instanceof If ||
+            if(expression instanceof Return||returnValue!=Void.INSTANCE&&
+                    (expression instanceof If ||
                     expression instanceof Container))
                 return returnValue;
         }
 
-        return null;
+        return Void.INSTANCE;
     }
 }
