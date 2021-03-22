@@ -134,14 +134,9 @@ public class CallCreateExecutor extends ExpressionExecutor<CallCreate> {
 
         Object value = new ContainerExecutor()
                 .provide(mainProvider, functionContext, functionContext, function);
-        if(value instanceof Void&&function.returnType!=Type.VOID){
-            if(function.returnType==Type.ANY)
-                return false;
-            else{
-                throw new KayJamRuntimeException(function, "The function must return a value of type " +
-                        function.returnType.name+", not a "+TypeUtils.getType(value.getClass()).name);
-            }
-        }
+        if(value instanceof Void&&function.returnType!=Type.VOID)
+            throw new KayJamRuntimeException(function, "The function must return a value of type " +
+                    function.returnType.name+", not a "+TypeUtils.getType(value.getClass()).name);
 
         return value;
     }
