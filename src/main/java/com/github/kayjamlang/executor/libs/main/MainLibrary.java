@@ -52,7 +52,7 @@ public class MainLibrary extends Library {
             }
         }).start()));
 
-        functions.add(new LibNamedFunction("thread", (mainContext, context, expression) -> CompletableFuture.runAsync(() -> {
+        functions.add(new LibNamedFunction("async", (mainContext, context, expression) -> CompletableFuture.runAsync(() -> {
             try {
                 Context ctx = new Context(context.parent,
                         context, true);
