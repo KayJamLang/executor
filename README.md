@@ -11,7 +11,7 @@ Basic code executor for KayJam Core
     <dependency>
       <groupId>com.github.kayjamlang</groupId>
       <artifactId>executor</artifactId>
-      <version>0.1.3.10</version>
+      <version>0.1.3.16</version>
     </dependency>
     ```
     
