@@ -10,7 +10,15 @@ public class Main {
     public static void main(String[] args) throws Exception {
         KayJamLexer lexer = new KayJamLexer(
                 "{" +
-                        "thread -> println(123);" +
+                        "fun voidVoid(){" +
+                        "return void();" +
+                        "}" +
+                        "" +
+                        "fun void(){" +
+                        "println(123);" +
+                        "}" +
+                        "" +
+                        "return voidVoid();" +
                         "}");
         KayJamParser parser = new KayJamParser(lexer);
 
@@ -18,6 +26,7 @@ public class Main {
         executor.addLibrary(new MainLibrary());
         Container container = (Container) parser.readExpression();
 
-        System.out.println(executor.execute(container));
+        Object obj = executor.execute(container);
+        System.out.println(obj);
     }
 }

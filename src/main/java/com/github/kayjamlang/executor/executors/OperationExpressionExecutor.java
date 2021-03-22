@@ -26,49 +26,49 @@ public class OperationExpressionExecutor extends ExpressionExecutor<OperationExp
                     if(left instanceof String||right instanceof String)
                         return left.toString() + right.toString();
                     else if(left instanceof Number&&right instanceof Number)
-                        return ((Number) left).longValue()+((Number) right).longValue();
+                        return ((Number) left).doubleValue()+((Number) right).doubleValue();
 
                     break;
 
                 case MINUS:
                     if(left instanceof Number&&right instanceof Number)
-                        return ((Number) left).longValue()-((Number) right).longValue();
+                        return ((Number) left).doubleValue()-((Number) right).doubleValue();
 
                     break;
 
                 case DIVISION:
                     if(left instanceof Number&&right instanceof Number)
-                        return ((Number) left).longValue()/((Number) right).longValue();
+                        return ((Number) left).doubleValue()/((Number) right).doubleValue();
 
                     break;
 
                 case MULTIPLY:
                     if(left instanceof Number&&right instanceof Number)
-                        return ((Number) left).longValue()*((Number) right).longValue();
+                        return ((Number) left).doubleValue()*((Number) right).doubleValue();
 
                     break;
 
                 case LESS_SIGN:
                     if(left instanceof Number&&right instanceof Number)
-                        return ((Number) left).longValue()<((Number) right).longValue();
+                        return ((Number) left).doubleValue()<((Number) right).doubleValue();
 
                     break;
 
                 case LESS_EQUALS_SIGN:
                     if(left instanceof Number&&right instanceof Number)
-                        return ((Number) left).longValue()<=((Number) right).longValue();
+                        return ((Number) left).doubleValue()<=((Number) right).doubleValue();
 
                     break;
 
                 case GREATER_SIGN:
                     if(left instanceof Number&&right instanceof Number)
-                        return ((Number) left).longValue()>((Number) right).longValue();
+                        return ((Number) left).doubleValue()>((Number) right).doubleValue();
 
                     break;
 
                 case GREATER_EQUALS_SIGN:
                     if(left instanceof Number&&right instanceof Number)
-                        return ((Number) left).longValue()>=((Number) right).longValue();
+                        return ((Number) left).doubleValue()>=((Number) right).doubleValue();
 
                     break;
 
