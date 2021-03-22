@@ -11,13 +11,13 @@ Basic code executor for KayJam Core
     <dependency>
       <groupId>com.github.kayjamlang</groupId>
       <artifactId>executor</artifactId>
-      <version>version</version>
+      <version>0.1.3.10</version>
     </dependency>
     ```
     
     Gradle:
     ```groovy
-    implementation group: 'com.github.kayjamlang', name: 'core', version: 'version'
+    implementation group: 'com.github.kayjamlang', name: 'core', version: '0.1.3.10'
     ```
 
 2. Call the method of the Executor class, 
@@ -25,9 +25,12 @@ Basic code executor for KayJam Core
    ```java
        class Main {
            public static void main(String[] args){
-               String code = "{some code}";
-               Object object = new Executor()
-                   .execute(code);
+               String code = "println(\"Hello, World\");";
+               Executor executor = new Executor();
+               
+               //Default library
+               executor.addLibrary(new MainLibrary());
+               executor.execute(code);
            }
        }   
    ```
