@@ -10,15 +10,12 @@ public class Main {
     public static void main(String[] args) throws Exception {
         KayJamLexer lexer = new KayJamLexer(
                 "{" +
-                        "fun voidVoid(){" +
-                        "return void();" +
+                        "fun test(): int {" +
+                        "" +
                         "}" +
                         "" +
-                        "fun void(){" +
-                        "println(123);" +
-                        "}" +
                         "" +
-                        "return voidVoid();" +
+                        "return test();" +
                         "}");
         KayJamParser parser = new KayJamParser(lexer);
 

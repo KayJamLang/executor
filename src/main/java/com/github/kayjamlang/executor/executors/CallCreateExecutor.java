@@ -140,7 +140,6 @@ public class CallCreateExecutor extends ExpressionExecutor<CallCreate> {
             else{
                 throw new KayJamRuntimeException(function, "The function must return a value of type " +
                         function.returnType.name+", not a "+TypeUtils.getType(value.getClass()).name);
-
             }
         }
 
