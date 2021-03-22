@@ -1,6 +1,7 @@
 package com.github.kayjamlang.executor.executors;
 
 import com.github.kayjamlang.core.Expression;
+import com.github.kayjamlang.core.Type;
 import com.github.kayjamlang.core.containers.ClassContainer;
 import com.github.kayjamlang.core.containers.Function;
 import com.github.kayjamlang.core.containers.ObjectContainer;
@@ -8,6 +9,8 @@ import com.github.kayjamlang.core.expressions.CallCreate;
 import com.github.kayjamlang.core.expressions.FunctionRef;
 import com.github.kayjamlang.core.provider.MainExpressionProvider;
 import com.github.kayjamlang.executor.*;
+import com.github.kayjamlang.executor.Void;
+import com.github.kayjamlang.executor.exceptions.KayJamRuntimeException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -129,7 +132,18 @@ public class CallCreateExecutor extends ExpressionExecutor<CallCreate> {
             );
         }
 
-        return new ContainerExecutor()
+        Object value = new ContainerExecutor()
                 .provide(mainProvider, functionContext, functionContext, function);
+        if(value instanceof Void&&function.returnType!=Type.VOID){
+            if(function.returnType==Type.ANY)
+                return false;
+            else{
+                throw new KayJamRuntimeException(function, "The function must return a value of type " +
+                        function.returnType.name+", not a "+TypeUtils.getType(value.getClass()).name);
+
+            }
+        }
+
+        return value;
     }
 }
