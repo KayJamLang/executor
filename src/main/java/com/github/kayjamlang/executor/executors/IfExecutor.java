@@ -4,6 +4,7 @@ import com.github.kayjamlang.core.expressions.If;
 import com.github.kayjamlang.core.provider.MainExpressionProvider;
 import com.github.kayjamlang.executor.Context;
 import com.github.kayjamlang.executor.MainContext;
+import com.github.kayjamlang.executor.Void;
 
 public class IfExecutor extends ExpressionExecutor<If> {
 
@@ -13,8 +14,12 @@ public class IfExecutor extends ExpressionExecutor<If> {
                           Context argsContext,
                           If expression) throws Exception {
         Object condition = mainProvider.provide(expression.condition, context, argsContext);
-        if(condition instanceof Boolean&&!(Boolean) condition)
+        if(condition instanceof Boolean&&!(Boolean) condition) {
+            if(expression.ifFalse==null)
+                return Void.INSTANCE;
+
             return mainProvider.provide(expression.ifFalse, context, argsContext);
+        }
 
         return mainProvider.provide(expression.ifTrue, context, argsContext);
     }

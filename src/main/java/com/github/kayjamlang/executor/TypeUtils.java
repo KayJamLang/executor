@@ -48,6 +48,9 @@ public class TypeUtils {
         if(type==Type.ANY)
             return true;
 
+        if(type==Type.VOID&&(value==Void.INSTANCE||value==null))
+            return true;
+
         if(type==Type.OBJECT&&value instanceof ObjectContainer)
             return true;
 
@@ -70,6 +73,6 @@ public class TypeUtils {
             return false;
         }
 
-        return type.typeClass.equals(value.getClass());
+        return type.typeClass.isAssignableFrom(value.getClass());
     }
 }

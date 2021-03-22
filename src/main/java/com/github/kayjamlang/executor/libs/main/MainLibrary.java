@@ -61,17 +61,13 @@ public class MainLibrary extends Library {
             if(!matcher.find())
                 return false;
 
-            ArrayClass arrayClass = new ArrayClass();
-            arrayClass.children.clear();
-
             List<Object> array = new LinkedList<>();
-            arrayClass.addVariable("array", array);
             array.add(0, matcher.group(0));
             for (int i = 0; i < matcher.groupCount(); i++) {
                 array.add(i+1, matcher.group(i+1));
             }
 
-            return arrayClass;
+            return ArrayClass.create(mainContext.executor, array);
         }, new Argument(Type.STRING, "pattern"),
                 new Argument(Type.STRING, "string")));
 
@@ -82,26 +78,21 @@ public class MainLibrary extends Library {
             Matcher matcher = Pattern.compile(pattern)
                     .matcher(string);
 
-            ArrayClass result = new ArrayClass();
-            result.children.clear();
 
             List<Object> resultArray = new LinkedList<>();
-            result.addVariable("array", resultArray);
             while(matcher.find()) {
-                ArrayClass arrayClass = new ArrayClass();
-                arrayClass.children.clear();
-
                 List<Object> array = new LinkedList<>();
-                arrayClass.addVariable("array", array);
                 array.add(0, matcher.group(0));
                 for (int i = 0; i < matcher.groupCount(); i++) {
                     array.add(i + 1, matcher.group(i + 1));
                 }
 
-                resultArray.add(resultArray.size(), arrayClass);
+                resultArray.add(resultArray.size(), ArrayClass.create(mainContext.executor,
+                        array));
             }
 
-            return resultArray.size()==0?false:result;
+            return resultArray.size()==0?false:ArrayClass
+                    .create(mainContext.executor, resultArray);
         }, new Argument(Type.STRING, "pattern"),
                 new Argument(Type.STRING, "string")));
 

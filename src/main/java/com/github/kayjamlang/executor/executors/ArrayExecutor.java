@@ -4,6 +4,7 @@ import com.github.kayjamlang.core.Expression;
 import com.github.kayjamlang.core.expressions.Array;
 import com.github.kayjamlang.core.provider.MainExpressionProvider;
 import com.github.kayjamlang.executor.Context;
+import com.github.kayjamlang.executor.Executor;
 import com.github.kayjamlang.executor.MainContext;
 import com.github.kayjamlang.executor.libs.main.ArrayClass;
 
@@ -18,15 +19,10 @@ public class ArrayExecutor extends ExpressionExecutor<Array> {
                           Context context,
                           Context argsContext,
                           Array expression) throws Exception {
-        ArrayClass arrayClass = new ArrayClass();
-        arrayClass.data.put("ctx", new Context(arrayClass, context, false));
-        arrayClass.children.clear();
-
         List<Object> list = new LinkedList<>();
-        arrayClass.addVariable("array", list);
         for(Expression item: expression.values)
             list.add(mainProvider.provide(item, context, argsContext));
 
-        return arrayClass;
+        return ArrayClass.create((Executor) mainProvider, list);
     }
 }
