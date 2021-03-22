@@ -28,7 +28,8 @@ public class TypeUtils {
 
         return isNumber(clazz)?
                 Type.INTEGER:
-                Type.getType(clazz);
+                clazz.getSimpleName().equals("double") ?
+                Type.DOUBLE: Type.getType(clazz);
     }
 
     public static boolean isNumber(Class<?> clazz){
@@ -37,7 +38,6 @@ public class TypeUtils {
             case "short":
             case "long":
             case "float":
-            case "double":
                 return true;
         }
 
