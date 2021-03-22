@@ -4,6 +4,7 @@ import com.github.kayjamlang.core.expressions.VariableSet;
 import com.github.kayjamlang.core.provider.MainExpressionProvider;
 import com.github.kayjamlang.executor.Context;
 import com.github.kayjamlang.executor.MainContext;
+import com.github.kayjamlang.executor.Void;
 import com.github.kayjamlang.executor.exceptions.KayJamRuntimeException;
 
 public class VariableSetExecutor extends ExpressionExecutor<VariableSet> {
@@ -15,6 +16,9 @@ public class VariableSetExecutor extends ExpressionExecutor<VariableSet> {
                           VariableSet expression) throws Exception {
         Object value =
                 mainProvider.provide(expression.expression, argsContext, argsContext);
+
+        if(value instanceof Void)
+            throw new KayJamRuntimeException(expression, "Variable cannot contain void type");
 
         if(!context.setVariable(expression.name, value))
             throw new KayJamRuntimeException(expression,
