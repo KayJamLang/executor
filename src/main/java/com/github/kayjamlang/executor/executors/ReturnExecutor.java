@@ -18,18 +18,19 @@ public class ReturnExecutor extends ExpressionExecutor<Return> {
         Object value = mainProvider.provide(expression.expression, context, argsContext);
         if(context.parent instanceof Function){
             Function func = (Function) context.parent;
-            boolean vr = func.returnType == Type.VOID;
 
-            if (vr && value != Void.INSTANCE)
-                throw new KayJamRuntimeException(func, "Void function can't return " +
-                        Type.getType(value.getClass()).name);
-            else if(func.returnType != Type.VOID && value == null)
-                throw new KayJamRuntimeException(func, "The function must return any value of type " +
-                        func.returnType.name);
-
-            if(!vr && !TypeUtils.isAccept(func.returnType, value))
-                throw new KayJamRuntimeException(func, "The function must return a value of type " +
-                        func.returnType.name+", not a "+TypeUtils.getType(value.getClass()).name);
+            if (func.returnType == Type.VOID) {
+                if (value != Void.INSTANCE)
+                    throw new KayJamRuntimeException(func, "Void function can't return " +
+                            Type.getType(value.getClass()).name);
+            } else {
+                if (value == null)
+                    throw new KayJamRuntimeException(func, "The function must return any value of type " +
+                            func.returnType.name);
+                if (!TypeUtils.isAccept(func.returnType, value))
+                    throw new KayJamRuntimeException(func, "The function must return a value of type " +
+                            func.returnType.name + ", not a " + TypeUtils.getType(value.getClass()).name);
+            }
         }
 
         return value;
