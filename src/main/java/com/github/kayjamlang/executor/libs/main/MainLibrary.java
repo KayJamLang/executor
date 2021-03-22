@@ -9,6 +9,7 @@ import com.github.kayjamlang.executor.libs.Library;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -50,6 +51,18 @@ public class MainLibrary extends Library {
                 throw new IllegalStateException(e);
             }
         }).start()));
+
+        functions.add(new LibNamedFunction("async", (mainContext, context, expression) -> CompletableFuture.runAsync(() -> {
+            try {
+                Context ctx = new Context(context.parent,
+                        context, true);
+
+                mainContext.executor
+                        .provide(expression, ctx, ctx);
+            } catch (Exception e) {
+                throw new IllegalStateException(e);
+            }
+        })));
 
         functions.add(new LibFunction("match", (mainContext, context) -> {
             String pattern = (String) context.variables.get("pattern");
