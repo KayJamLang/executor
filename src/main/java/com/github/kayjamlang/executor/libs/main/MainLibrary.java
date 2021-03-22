@@ -9,6 +9,7 @@ import com.github.kayjamlang.executor.libs.Library;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -39,7 +40,7 @@ public class MainLibrary extends Library {
             return false;
         }, new Argument(Type.ANY, "value")));
 
-        functions.add(new LibNamedFunction("thread", (mainContext, context, expression) -> new Thread(()->{
+        functions.add(new LibNamedFunction("thread", (mainContext, context, expression) -> new Thread(() -> {
             try {
                 Context ctx = new Context(context.parent,
                         context, true);
@@ -51,6 +52,18 @@ public class MainLibrary extends Library {
             }
         }).start()));
 
+        functions.add(new LibNamedFunction("async", (mainContext, context, expression) -> CompletableFuture.runAsync(() -> {
+            try {
+                Context ctx = new Context(context.parent,
+                        context, true);
+
+                mainContext.executor
+                        .provide(expression, ctx, ctx);
+            } catch (Exception e) {
+                throw new IllegalStateException(e);
+            }
+        })));
+
         functions.add(new LibFunction("match", (mainContext, context) -> {
             String pattern = (String) context.variables.get("pattern");
             String string = (String) context.variables.get("string");
@@ -58,7 +71,7 @@ public class MainLibrary extends Library {
             Matcher matcher = Pattern.compile(pattern)
                     .matcher(string);
 
-            if(!matcher.find())
+            if (!matcher.find())
                 return false;
 
             ArrayClass arrayClass = new ArrayClass();
@@ -68,7 +81,7 @@ public class MainLibrary extends Library {
             arrayClass.addVariable("array", array);
             array.add(0, matcher.group(0));
             for (int i = 0; i < matcher.groupCount(); i++) {
-                array.add(i+1, matcher.group(i+1));
+                array.add(i + 1, matcher.group(i + 1));
             }
 
             return arrayClass;
@@ -87,7 +100,7 @@ public class MainLibrary extends Library {
 
             List<Object> resultArray = new LinkedList<>();
             result.addVariable("array", resultArray);
-            while(matcher.find()) {
+            while (matcher.find()) {
                 ArrayClass arrayClass = new ArrayClass();
                 arrayClass.children.clear();
 
@@ -101,7 +114,7 @@ public class MainLibrary extends Library {
                 resultArray.add(resultArray.size(), arrayClass);
             }
 
-            return resultArray.size()==0?false:result;
+            return resultArray.size() == 0 ? false : result;
         }, new Argument(Type.STRING, "pattern"),
                 new Argument(Type.STRING, "string")));
 
@@ -114,8 +127,9 @@ public class MainLibrary extends Library {
         classes.put("array", new ArrayClass());
     }
 
-    public interface Output{
+    public interface Output {
         void print(Object value);
+
         void println(Object value);
     }
 }
