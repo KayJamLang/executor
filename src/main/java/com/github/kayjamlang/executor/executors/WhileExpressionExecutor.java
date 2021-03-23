@@ -22,7 +22,7 @@ public class WhileExpressionExecutor extends ExpressionExecutor<WhileExpression>
                 break;
 
             Object bodyValue = mainProvider.provide(expression.expression, ctx, ctx);
-            if(bodyValue!=null)
+            if(bodyValue!=Void.INSTANCE)
                 return bodyValue;
         }
 

@@ -26,7 +26,7 @@ public class ForExpressionExecutor extends ExpressionExecutor<ForExpression> {
             ctx.variables.put(expression.variableName, i);
 
             Object bodyValue = mainProvider.provide(expression.body, ctx, ctx);
-            if(bodyValue!=null)
+            if(bodyValue!=Void.INSTANCE)
                 return bodyValue;
         }
 

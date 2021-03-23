@@ -9,6 +9,7 @@ import com.github.kayjamlang.executor.MainContext;
 import com.github.kayjamlang.executor.TypeUtils;
 import com.github.kayjamlang.executor.Void;
 import com.github.kayjamlang.executor.exceptions.KayJamRuntimeException;
+import com.github.kayjamlang.executor.libs.Library;
 
 public class ReturnExecutor extends ExpressionExecutor<Return> {
 
@@ -16,7 +17,7 @@ public class ReturnExecutor extends ExpressionExecutor<Return> {
     public Object provide(MainExpressionProvider<Object, Context, MainContext> mainProvider,
                           Context context, Context argsContext, Return expression) throws Exception {
         Object value = mainProvider.provide(expression.expression, context, argsContext);
-        if(context.parent instanceof Function){
+        if(context.parent instanceof Function&&!(context.parent instanceof Library.LibFunction)){
             Function func = (Function) context.parent;
 
             if (func.returnType == Type.VOID && value != Void.INSTANCE)
