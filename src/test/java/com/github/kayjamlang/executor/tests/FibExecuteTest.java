@@ -39,7 +39,7 @@ public class FibExecuteTest {
 
     @Test(timeout = 90)
     public void test() throws Exception {
-        assertEquals(55L, executor.execute(container));
+        assertEquals(55.0, executor.execute(container));
     }
 
     @After

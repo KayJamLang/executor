@@ -33,7 +33,7 @@ public class MathOperationsTest {
 
     @Test(timeout = 90)
     public void test() throws Exception {
-        assertEquals(3L, executor.execute((Container) parser.readExpression()));
+        assertEquals(3.0, executor.execute((Container) parser.readExpression()));
     }
 
     @After

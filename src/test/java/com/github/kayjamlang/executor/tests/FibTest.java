@@ -37,7 +37,7 @@ public class FibTest {
 
     @Test(timeout = 90)
     public void test() throws Exception {
-        assertEquals(55L, executor.execute((Container) parser.readExpression()));
+        assertEquals(55.0, executor.execute((Container) parser.readExpression()));
     }
 
     @After
