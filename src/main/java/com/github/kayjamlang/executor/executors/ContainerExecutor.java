@@ -19,9 +19,7 @@ public class ContainerExecutor extends ExpressionExecutor<Container> {
         
         for(Expression expression: container.children){
             Object returnValue = mainProvider.provide(expression, context, argsContext);
-            if(expression instanceof Return||returnValue!=Void.INSTANCE&&
-                    (expression instanceof If ||
-                    expression instanceof Container))
+            if(expression instanceof Return)
                 return returnValue;
         }
 

@@ -11,6 +11,7 @@ import com.github.kayjamlang.core.provider.MainExpressionProvider;
 import com.github.kayjamlang.executor.*;
 import com.github.kayjamlang.executor.Void;
 import com.github.kayjamlang.executor.exceptions.KayJamRuntimeException;
+import com.github.kayjamlang.executor.libs.Library;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -134,7 +135,8 @@ public class CallCreateExecutor extends ExpressionExecutor<CallCreate> {
 
         Object value = new ContainerExecutor()
                 .provide(mainProvider, functionContext, functionContext, function);
-        if(value instanceof Void&&function.returnType!=Type.VOID)
+        if(!(function instanceof Library.LibFunction)&&
+                value instanceof Void&&function.returnType!=Type.VOID)
             throw new KayJamRuntimeException(function, "The function must return a value of type " +
                     function.returnType.name+", not a "+TypeUtils.getType(value.getClass()).name);
 

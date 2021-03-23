@@ -51,15 +51,6 @@ public class StringClass extends Library.LibClass {
                 return result.substring(0, result.length()-1);
             }, new Argument(Type.ARRAY, "strings"),
                     new Argument(Type.ANY, "delimiter")));
-
-            //PregMatch
-            addFunction(new Library.LibFunction("matches", (mainContext, context) -> {
-                String pattern = (String) context.variables.get("pattern");
-                String content = (String) context.variables.get("content");
-
-                return content.matches(pattern);
-            }, new Argument(Type.STRING, "pattern"),
-                    new Argument(Type.STRING, "content")));
         }
     }
 }

@@ -10,8 +10,8 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class ConstExecutor extends ExpressionExecutor<Const> {
-    private final Pattern pattern = Pattern.compile("\\{\\$(\\w+)}");
-    private final Pattern posix = Pattern.compile("\\\\(.)");
+    private static final Pattern pattern = Pattern.compile("\\{\\$(\\w+)\\}");
+    private static final Pattern posix = Pattern.compile("\\\\(.)");
 
     @Override
     public Object provide(MainExpressionProvider<Object, Context, MainContext> mainProvider,
