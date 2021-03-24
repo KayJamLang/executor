@@ -72,10 +72,17 @@ public class OperationExpressionExecutor extends ExpressionExecutor<OperationExp
 
                     break;
 
-                case EQUALS:
+                case EQUALS: {
+                    if(left instanceof Number&&right instanceof Number)
+                        return left==right;
+
                     return Objects.equals(left, right);
+                }
 
                 case NOT_EQUALS:
+                    if(left instanceof Number&&right instanceof Number)
+                        return left!=right;
+
                     return !Objects.equals(left, right);
 
                 case OR:
