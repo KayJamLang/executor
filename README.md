@@ -34,3 +34,5 @@ Basic code executor for KayJam Core
            }
        }   
    ```
+## Additionally
+[Library catalog for KayJam Executor](https://github.com/KayJamLang/executor/blob/main/libs.md)
