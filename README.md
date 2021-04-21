@@ -17,7 +17,7 @@ Basic code executor for KayJam Core
     
     Gradle:
     ```groovy
-    implementation group: 'com.github.kayjamlang', name: 'core', version: '0.1.3.10'
+    implementation group: 'com.github.kayjamlang', name: 'executor', version: '0.1.3.16'
     ```
 
 2. Call the method of the Executor class, 
