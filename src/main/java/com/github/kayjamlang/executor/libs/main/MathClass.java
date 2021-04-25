@@ -11,7 +11,7 @@ public class MathClass extends Library.LibClass {
     }
 
     private static class Companion extends Library.LibObject{
-        public Companion() {
+        public Companion() throws Exception {
             super(null);
             LibraryUtils.importFunctionsFormClass(this, Math.class);
         }

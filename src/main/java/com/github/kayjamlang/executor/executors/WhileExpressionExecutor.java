@@ -1,15 +1,14 @@
 package com.github.kayjamlang.executor.executors;
 
-import com.github.kayjamlang.core.expressions.WhileExpression;
-import com.github.kayjamlang.core.provider.MainExpressionProvider;
+import com.github.kayjamlang.core.expressions.loops.WhileExpression;
 import com.github.kayjamlang.executor.Context;
-import com.github.kayjamlang.executor.MainContext;
+import com.github.kayjamlang.executor.Executor;
 import com.github.kayjamlang.executor.Void;
 
 public class WhileExpressionExecutor extends ExpressionExecutor<WhileExpression> {
 
     @Override
-    public Object provide(MainExpressionProvider<Object, Context, MainContext> mainProvider,
+    public Object provide(Executor mainProvider,
                           Context context,
                           Context argsContext,
                           WhileExpression expression) throws Exception {

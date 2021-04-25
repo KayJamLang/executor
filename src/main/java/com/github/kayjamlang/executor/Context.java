@@ -1,8 +1,9 @@
 package com.github.kayjamlang.executor;
 
-import com.github.kayjamlang.core.Expression;
+import com.github.kayjamlang.core.Type;
+import com.github.kayjamlang.core.expressions.Expression;
 import com.github.kayjamlang.core.containers.Container;
-import com.github.kayjamlang.core.containers.Function;
+import com.github.kayjamlang.core.containers.FunctionContainer;
 import com.github.kayjamlang.executor.exceptions.KayJamNotFoundException;
 
 import java.util.HashMap;
@@ -16,7 +17,7 @@ public class Context implements Cloneable {
     public final Container parent;
     public final Context parentContext;
     public final boolean useParentVars;
-    public final Map<String, Object> variables = new HashMap<>();
+    public final Map<String, LocalVariable> variables = new HashMap<>();
 
     public Context(Container parent, Context parentContext, boolean useParentVars) {
         count++;
@@ -40,34 +41,54 @@ public class Context implements Cloneable {
         this(parent, parentContext, true);
     }
 
-    public Function findFunction(Expression expression, String name, List<Object> args)
+    public FunctionContainer findFunction(MainContext context,
+                                          Expression expression, String name, List<Type> args)
             throws KayJamNotFoundException {
 
-        for(Function function: parent.functions)
+        for(FunctionContainer function: parent.functions)
             if(function.name.equals(name)) {
                 if(function.arguments.size()==args.size()&&
-                        TypeUtils.isAccept(function.arguments, args)){
+                        TypeUtils.isAccept(context, function.arguments, args)){
                     return function;
                 }
             }
 
         if(parentContext!=null)
-            return parentContext.findFunction(expression, name, args);
+            return parentContext.findFunction(context, expression, name, args);
 
         throw new KayJamNotFoundException(expression, "function", name);
     }
 
-    public boolean setVariable(String name, Object value){
+    public void addVariable(String name, Object value){
+        variables.put(name, new LocalVariable(TypeUtils.getType(value.getClass()), value));
+    }
+
+    @SuppressWarnings("unchecked")
+    public <T> T getVariable(String name){
+        return (T) variables.get(name).value;
+    }
+
+    public boolean setVariable(String name, Type type, Object value){
         if(useParentVars&&
                 parentContext!=null&&parentContext.variables.containsKey(name)){
-            variables.put(name, value);
-            return parentContext.setVariable(name, value);
+            variables.put(name, new LocalVariable(type, value));
+            return parentContext.setVariable(name, type, value);
         }else if(variables.containsKey(name)) {
-            variables.put(name, value);
+            variables.put(name, new LocalVariable(type, value));
             return true;
         }
 
         return false;
+    }
+
+    public static class LocalVariable {
+        public final Type type;
+        public final Object value;
+
+        public LocalVariable(Type type, Object value) {
+            this.type = type;
+            this.value = value;
+        }
     }
 
     @Override

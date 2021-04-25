@@ -1,15 +1,17 @@
 package com.github.kayjamlang.executor.executors;
 
-import com.github.kayjamlang.core.expressions.Const;
+import com.github.kayjamlang.core.expressions.ValueExpression;
 import com.github.kayjamlang.core.provider.MainExpressionProvider;
+import com.github.kayjamlang.core.provider.ValueExpressionProvider;
 import com.github.kayjamlang.executor.Context;
+import com.github.kayjamlang.executor.Executor;
 import com.github.kayjamlang.executor.MainContext;
 import com.github.kayjamlang.executor.exceptions.KayJamNotFoundException;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class ConstExecutor extends ExpressionExecutor<Const> {
+public class ValueExpressionExecutor extends ValueExpressionProvider<Object, Context, MainContext> {
     private static final Pattern pattern = Pattern.compile("\\{\\$(\\w+)\\}");
     private static final Pattern posix = Pattern.compile("\\\\(.)");
 
@@ -17,7 +19,7 @@ public class ConstExecutor extends ExpressionExecutor<Const> {
     public Object provide(MainExpressionProvider<Object, Context, MainContext> mainProvider,
                           Context context,
                           Context argsContext,
-                          Const expression) throws KayJamNotFoundException {
+                          ValueExpression expression) throws KayJamNotFoundException {
         if(expression.value instanceof String){
             String string = (String) expression.value;
 

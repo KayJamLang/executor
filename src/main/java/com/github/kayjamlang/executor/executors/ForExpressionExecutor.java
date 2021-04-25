@@ -1,17 +1,16 @@
 package com.github.kayjamlang.executor.executors;
 
-import com.github.kayjamlang.core.Range;
-import com.github.kayjamlang.core.expressions.ForExpression;
-import com.github.kayjamlang.core.provider.MainExpressionProvider;
+import com.github.kayjamlang.core.expressions.data.Range;
+import com.github.kayjamlang.core.expressions.loops.ForExpression;
 import com.github.kayjamlang.executor.Context;
-import com.github.kayjamlang.executor.MainContext;
+import com.github.kayjamlang.executor.Executor;
 import com.github.kayjamlang.executor.Void;
 import com.github.kayjamlang.executor.exceptions.KayJamRuntimeException;
 
 public class ForExpressionExecutor extends ExpressionExecutor<ForExpression> {
 
     @Override
-    public Object provide(MainExpressionProvider<Object, Context, MainContext> mainProvider,
+    public Object provide(Executor mainProvider,
                           Context context,
                           Context argsContext,
                           ForExpression expression) throws Exception {
@@ -21,9 +20,10 @@ public class ForExpressionExecutor extends ExpressionExecutor<ForExpression> {
         Range range = (Range) rangeObject;
 
         Context ctx = new Context(context.parent, context, true);
-        for (long i = range.from; i != range.to; i+=range.changeValue) {
+        for (Number i = range.from; !i.equals(range.to); i=
+                i.doubleValue()+range.changeValue.doubleValue()) {
             ctx.clearVariables();
-            ctx.variables.put(expression.variableName, i);
+            ctx.addVariable(expression.variableName, i);
 
             Object bodyValue = mainProvider.provide(expression.body, ctx, ctx);
             if(bodyValue!=Void.INSTANCE)

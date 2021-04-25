@@ -1,9 +1,8 @@
 package com.github.kayjamlang.executor.libs.main;
 
-import com.github.kayjamlang.core.Argument;
+import com.github.kayjamlang.core.expressions.data.Argument;
 import com.github.kayjamlang.core.KayJamVersion;
 import com.github.kayjamlang.core.Type;
-import com.github.kayjamlang.core.containers.Function;
 import com.github.kayjamlang.executor.Context;
 import com.github.kayjamlang.executor.libs.Library;
 
@@ -30,13 +29,13 @@ public class MainLibrary extends Library {
     }
 
     public MainLibrary(Output output) throws Exception {
-        functions.add(new LibFunction("println", (mainContext, context) -> {
-            output.println(context.variables.get("value"));
+        functions.add(new LibFunction("println", Type.VOID, (mainContext, context) -> {
+            output.println(context.getVariable("value"));
             return false;
         }, new Argument(Type.ANY, "value")));
 
-        functions.add(new LibFunction("print", (mainContext, context) -> {
-            output.print(context.variables.get("value"));
+        functions.add(new LibFunction("print", Type.VOID, (mainContext, context) -> {
+            output.print(context.getVariable("value"));
             return false;
         }, new Argument(Type.ANY, "value")));
 
@@ -64,9 +63,9 @@ public class MainLibrary extends Library {
             }
         })));
 
-        functions.add(new LibFunction("match", (mainContext, context) -> {
-            String pattern = (String) context.variables.get("pattern");
-            String string = (String) context.variables.get("string");
+        functions.add(new LibFunction("match", Type.ARRAY, (mainContext, context) -> {
+            String pattern = context.getVariable("pattern");
+            String string = context.getVariable("string");
 
             Matcher matcher = Pattern.compile(pattern)
                     .matcher(string);
@@ -84,9 +83,9 @@ public class MainLibrary extends Library {
         }, new Argument(Type.STRING, "pattern"),
                 new Argument(Type.STRING, "string")));
 
-        functions.add(new LibFunction("matchAll", (mainContext, context) -> {
-            String pattern = (String) context.variables.get("pattern");
-            String string = (String) context.variables.get("string");
+        functions.add(new LibFunction("matchAll", Type.ARRAY, (mainContext, context) -> {
+            String pattern = context.getVariable("pattern");
+            String string = context.getVariable("string");
 
             Matcher matcher = Pattern.compile(pattern)
                     .matcher(string);
@@ -109,7 +108,8 @@ public class MainLibrary extends Library {
         }, new Argument(Type.STRING, "pattern"),
                 new Argument(Type.STRING, "string")));
 
-        functions.add(new LibFunction("getKayJamVersion", (mainContext, context) -> KayJamVersion.VERSION_CODE));
+        functions.add(new LibFunction("getKayJamVersion", Type.INTEGER, (mainContext, context) ->
+                KayJamVersion.VERSION_CODE));
 
         classes.put("String", new StringClass());
         classes.put("Threads", new ThreadsClass());

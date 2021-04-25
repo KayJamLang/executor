@@ -20,7 +20,7 @@ public class FibExecuteTest {
     @BeforeClass
     public static void init() throws Exception {
         KayJamLexer lexer = new KayJamLexer("{\n" +
-                "fun fib(int x): int {\n" +
+                "fun fib(int? x): int? {\n" +
                 "   return if(x<3) 1 else\n" +
                 "       fib(x-1)+fib(x-2);\n" +
                 "}\n" +
@@ -39,7 +39,7 @@ public class FibExecuteTest {
 
     @Test(timeout = 90)
     public void test() throws Exception {
-        assertEquals(55.0, executor.execute(container));
+        assertEquals(55, executor.execute(container));
     }
 
     @After

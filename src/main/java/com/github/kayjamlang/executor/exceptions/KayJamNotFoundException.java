@@ -1,6 +1,6 @@
 package com.github.kayjamlang.executor.exceptions;
 
-import com.github.kayjamlang.core.Expression;
+import com.github.kayjamlang.core.expressions.Expression;
 
 public class KayJamNotFoundException extends KayJamRuntimeException {
 

@@ -1,12 +1,10 @@
 package com.github.kayjamlang.executor.libs;
 
-import com.github.kayjamlang.core.Argument;
-import com.github.kayjamlang.core.Expression;
+import com.github.kayjamlang.core.exceptions.TypeException;
+import com.github.kayjamlang.core.expressions.*;
+import com.github.kayjamlang.core.expressions.data.Argument;
 import com.github.kayjamlang.core.Type;
 import com.github.kayjamlang.core.containers.*;
-import com.github.kayjamlang.core.expressions.Const;
-import com.github.kayjamlang.core.expressions.Return;
-import com.github.kayjamlang.core.expressions.Variable;
 import com.github.kayjamlang.core.opcodes.AccessIdentifier;
 import com.github.kayjamlang.executor.Context;
 import com.github.kayjamlang.executor.MainContext;
@@ -15,22 +13,24 @@ import java.util.*;
 
 public class Library implements Lib {
 
-    public final List<Function> functions = new ArrayList<>();
+    public final List<FunctionContainer> functions = new ArrayList<>();
     public final Map<String, ClassContainer> classes = new HashMap<>();
 
-    public static class LibFunction extends Function {
+    public static class LibFunction extends FunctionContainer {
 
-        public LibFunction(String name, CodeExecExpression.Code code, Argument... arguments) {
-            this(name, code, Arrays.asList(arguments));
+        public LibFunction(String name, Type returnType,
+                           CodeExecExpression.Code code, Argument... arguments) {
+            this(name, returnType, code, Arrays.asList(arguments));
 
-            children.add(new Return(new CodeExecExpression(code), 0));
+            children.add(new ReturnExpression(new CodeExecExpression(code), 0));
         }
 
-        public LibFunction(String name, CodeExecExpression.Code code, List<Argument> arguments) {
+        public LibFunction(String name, Type returnType,
+                           CodeExecExpression.Code code, List<Argument> arguments) {
             super(name, new ArrayList<>(), AccessIdentifier.NONE, arguments,
-                    0, Type.ANY, new ArrayList<>());
+                    0, returnType, new ArrayList<>());
 
-            children.add(new Return(new CodeExecExpression(code), 0));
+            children.add(new ReturnExpression(new CodeExecExpression(code), 0));
         }
     }
 
@@ -43,14 +43,14 @@ public class Library implements Lib {
         functions.add(function);
     }
 
-    public static class LibNamedFunction extends NamedExpressionFunction {
+    public static class LibNamedFunction extends NamedExpressionFunctionContainer {
         public LibNamedFunction(String name, Runnable runnable) {
             super(name, new ArrayList<>(), AccessIdentifier.NONE, 0);
 
-            children.add(new Return(new CodeExecExpression(
+            children.add(new ReturnExpression(new CodeExecExpression(
                     (mainContext, context) -> {
                         runnable.run(mainContext, context,
-                                ((NamedExpression) context.variables.get(name)).expression);
+                                ((NamedExpression) context.getVariable(name)).expression);
                         return null;
                     }), 0));
         }
@@ -65,7 +65,7 @@ public class Library implements Lib {
         private final Context context = new Context(this, null,
                 false);
 
-        public LibObject(ObjectBind binder) {
+        public LibObject(ObjectBind binder) throws Exception {
             super(new ArrayList<>(), AccessIdentifier.NONE, 0);
 
             if(binder!=null)
@@ -79,12 +79,7 @@ public class Library implements Lib {
         }
 
         public void addVariable(String name, Object value){
-            context.variables.put(name, value);
-        }
-
-        @SuppressWarnings("unchecked")
-        public <T> T getVariable(String name){
-            return (T) context.variables.get(name);
+            context.addVariable(name, value);
         }
 
         public interface ObjectBind {
@@ -124,7 +119,7 @@ public class Library implements Lib {
         }
 
         public void addVariable(String name, Object value){
-            children.add(new Variable(name, new Const(value, 0),
+            children.add(new VariableExpression(name, new ValueExpression(value),
                     AccessIdentifier.PUBLIC, 0));
         }
 
@@ -151,7 +146,7 @@ public class Library implements Lib {
         }
 
         public interface Code {
-            Object execute(MainContext mainContext, Context context) throws Exception;
+            Object execute(MainContext mainContext, Context context) throws Exception ;
         }
     }
 }

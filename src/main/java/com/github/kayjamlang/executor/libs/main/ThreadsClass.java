@@ -1,8 +1,7 @@
 package com.github.kayjamlang.executor.libs.main;
 
-import com.github.kayjamlang.core.Argument;
+import com.github.kayjamlang.core.expressions.data.Argument;
 import com.github.kayjamlang.core.Type;
-import com.github.kayjamlang.core.containers.Function;
 import com.github.kayjamlang.executor.libs.Library;
 
 import java.util.concurrent.TimeUnit;
@@ -16,11 +15,11 @@ public class ThreadsClass extends Library.LibClass {
     }
 
     private static class Companion extends Library.LibObject {
-        public Companion() {
+        public Companion() throws Exception {
             super(null);
 
-            addFunction(new Library.LibFunction("sleep", (mainContext, context) -> {
-                long ms = (long) context.variables.get("ms");
+            addFunction(new Library.LibFunction("sleep", Type.VOID, (mainContext, context) -> {
+                long ms = context.getVariable("ms");
                 TimeUnit.MILLISECONDS.sleep(ms);
                 return null;
             }, new Argument(Type.INTEGER, "ms")));

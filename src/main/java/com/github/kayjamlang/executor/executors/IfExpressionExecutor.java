@@ -1,18 +1,17 @@
 package com.github.kayjamlang.executor.executors;
 
-import com.github.kayjamlang.core.expressions.If;
-import com.github.kayjamlang.core.provider.MainExpressionProvider;
+import com.github.kayjamlang.core.expressions.IfExpression;
 import com.github.kayjamlang.executor.Context;
-import com.github.kayjamlang.executor.MainContext;
+import com.github.kayjamlang.executor.Executor;
 import com.github.kayjamlang.executor.Void;
 
-public class IfExecutor extends ExpressionExecutor<If> {
+public class IfExpressionExecutor extends ExpressionExecutor<IfExpression> {
 
     @Override
-    public Object provide(MainExpressionProvider<Object, Context, MainContext> mainProvider,
+    public Object provide(Executor mainProvider,
                           Context context,
                           Context argsContext,
-                          If expression) throws Exception {
+                          IfExpression expression) throws Exception {
         Object condition = mainProvider.provide(expression.condition, context, argsContext);
         if(condition instanceof Boolean&&!(Boolean) condition) {
             if(expression.ifFalse==null)

@@ -1,14 +1,12 @@
 package com.github.kayjamlang.executor.libs.main;
 
-import com.github.kayjamlang.core.Argument;
 import com.github.kayjamlang.core.Type;
-import com.github.kayjamlang.executor.ClassUtils;
+import com.github.kayjamlang.core.expressions.data.Argument;
 import com.github.kayjamlang.executor.Context;
 import com.github.kayjamlang.executor.Executor;
 import com.github.kayjamlang.executor.libs.Library;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 public class MapClass extends Library.LibClass {
@@ -16,32 +14,38 @@ public class MapClass extends Library.LibClass {
     public static final String FIELD_MAP = "m";
 
     public static MapClass create(Executor executor, Map<?, ?> map) throws Exception {
-        return ClassUtils.newSimpleInstance(executor, new MapClass(), map);
+        MapClass mapClass = new MapClass();
+        Context context = new Context(mapClass, executor.mainContext, false);
+        context.addVariable(FIELD_MAP, map);
+
+        mapClass.data.put("ctx", context);
+        return mapClass;
     }
 
     public MapClass() throws Exception {
         super("map", null);
+        addConstructor(new Library.LibConstructor((mainContext, context) ->{
+                context.parentContext.addVariable(FIELD_MAP, new HashMap<>());
+                return Void.TYPE;
+        }));
         addConstructor(new Library.LibConstructor((mainContext, context) ->
-                context.parentContext.variables.put(FIELD_MAP, new HashMap<>())));
-        addConstructor(new Library.LibConstructor((mainContext, context) ->
-                context.parentContext.variables.put(FIELD_MAP, context.variables.get(FIELD_MAP)),
-                new Argument(new Type(FIELD_MAP, Map.class, false),
-                        FIELD_MAP)));
-        addFunction(new Library.LibFunction("put", (mainContext, context) -> {
+                context.parentContext.variables.put(FIELD_MAP, context.getVariable(FIELD_MAP)),
+                new Argument(Type.of(FIELD_MAP), FIELD_MAP)));
+        addFunction(new Library.LibFunction("put", Type.of("map"), (mainContext, context) -> {
             Map<Object, Object> map = getVariable(context, FIELD_MAP);
-            map.put(context.variables.get("key"), context.variables.get("value"));
+            map.put(context.getVariable("key"), context.getVariable("value"));
             return context.parentContext.parent;
         }, new Argument(Type.ANY, "key"),
                 new Argument(Type.ANY, "value")));
 
-        addFunction(new Library.LibFunction("get", (mainContext, context) -> {
+        addFunction(new Library.LibFunction("get", Type.ANY, (mainContext, context) -> {
             Map<Object, Object> map = getVariable(context, FIELD_MAP);
-            return map.getOrDefault(context.variables.get("key"), false);
+            return map.getOrDefault(context.getVariable("key"), false);
         }, new Argument(Type.ANY, "key")));
 
-        addFunction(new Library.LibFunction("get", (mainContext, context) -> {
+        addFunction(new Library.LibFunction("get", Type.of("map"), (mainContext, context) -> {
             Map<Object, Object> map = getVariable(context, FIELD_MAP);
-            return map.getOrDefault(context.variables.get("key"), context.variables.get("defaultValue"));
+            return map.getOrDefault(context.getVariable("key"), context.getVariable("defaultValue"));
         }, new Argument(Type.ANY, "key"),
                 new Argument(Type.ANY, "defaultValue")));
     }
