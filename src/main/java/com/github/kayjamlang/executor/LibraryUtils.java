@@ -21,7 +21,8 @@ public class LibraryUtils {
                             TypeUtils.getType(parameter.getType()),
                             parameter.getName()));
 
-                /*library.addFunction(new Library.LibFunction(method.getName(),
+                library.addFunction(new Library.LibFunction(method.getName(),
+                        TypeUtils.getType(method.getReturnType()),
                         (mainContext, context) -> {
                             Object[] args =
                                     new Object[method.getParameters().length];
@@ -35,7 +36,7 @@ public class LibraryUtils {
                                     .getMethod("invoke",
                                             Object.class, Object[].class);
                             return invokeMethod.invoke(method, null, args);
-                        }, arguments));*/
+                        }, arguments));
             }
         }
     }

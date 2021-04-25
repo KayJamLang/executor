@@ -5,6 +5,7 @@ import com.github.kayjamlang.core.containers.ClassContainer;
 import com.github.kayjamlang.core.containers.ObjectContainer;
 import com.github.kayjamlang.core.expressions.FunctionRefExpression;
 import com.github.kayjamlang.core.expressions.data.Argument;
+import com.github.kayjamlang.core.expressions.data.Range;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -46,13 +47,24 @@ public class TypeUtils {
     }
 
     public static Type getType(Class<?> clazz){
-        if(clazz==ClassContainer.class)
+        if(ClassContainer.class.equals(clazz))
             return Type.OBJECT;
+        else if(Range.class.equals(clazz))
+            return Type.RANGE;
+        else if(clazz.equals(java.lang.Void.TYPE))
+            return Type.VOID;
+        else switch (clazz.getSimpleName()){
+            case "short":
+            case "int": return Type.INTEGER;
 
-        return isNumber(clazz)?
-                Type.INTEGER:
-                clazz.getSimpleName().equals("double") ?
-                Type.DOUBLE: Type.getType(clazz);
+            case "long": return Type.LONG;
+            case "float":
+            case "double": return Type.DOUBLE;
+            case "String": return Type.STRING;
+            case "boolean": return Type.BOOLEAN;
+        }
+
+        return Type.of(clazz.getSimpleName());
     }
 
     public static Number getNumberType(Type type, Number number){
