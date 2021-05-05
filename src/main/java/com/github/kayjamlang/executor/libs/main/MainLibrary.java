@@ -41,8 +41,8 @@ public class MainLibrary extends Library {
 
         functions.add(new LibNamedFunction("thread", (mainContext, context, expression) -> new Thread(()->{
             try {
-                Context ctx = new Context(context.parent,
-                        context, true);
+                Context ctx = new Context(context.parentContext.parent,
+                        context.parentContext, true);
 
                 mainContext.executor
                         .provide(expression, ctx, ctx);

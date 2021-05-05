@@ -34,7 +34,7 @@ public class MapClass extends Library.LibClass {
         addFunction(new Library.LibFunction("put", Type.of("map"), (mainContext, context) -> {
             Map<Object, Object> map = getVariable(context, FIELD_MAP);
             map.put(context.getVariable("key"), context.getVariable("value"));
-            return context.parentContext.parent;
+            return this;
         }, new Argument(Type.ANY, "key"),
                 new Argument(Type.ANY, "value")));
 
@@ -42,6 +42,13 @@ public class MapClass extends Library.LibClass {
             Map<Object, Object> map = getVariable(context, FIELD_MAP);
             return map.getOrDefault(context.getVariable("key"), false);
         }, new Argument(Type.ANY, "key")));
+
+        addFunction(new Library.LibFunction("remove", Type.of("map"), (mainContext, context) -> {
+                    Map<Object, Object> map = getVariable(context, FIELD_MAP);
+                    map.remove(context.getVariable("key"), context.getVariable("value"));
+                    return this;
+        }, new Argument(Type.ANY, "key"),
+                new Argument(Type.ANY, "value")));
 
         addFunction(new Library.LibFunction("get", Type.of("map"), (mainContext, context) -> {
             Map<Object, Object> map = getVariable(context, FIELD_MAP);
@@ -62,5 +69,9 @@ public class MapClass extends Library.LibClass {
 
     public Map<Object, Object> getMap(Context context){
         return getVariable(context, FIELD_MAP);
+    }
+
+    public Map<Object, Object> getMap(){
+        return getVariable((Context) data.get("ctx"), FIELD_MAP);
     }
 }
