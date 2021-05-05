@@ -20,12 +20,9 @@ public class ReturnExpressionExecutor extends ExpressionExecutor<ReturnExpressio
                 !(context.parent instanceof Library.LibFunction)){
             FunctionContainer func = (FunctionContainer) context.parent;
 
-            if (func.returnType == Type.VOID && value != Void.INSTANCE)
+            if (func.returnType.equals(Type.VOID))
                 throw new KayJamRuntimeException(func, "Void function can't return " +
                         Type.getType(value.getClass()).name);
-            else if(func.returnType != Type.VOID && value == Void.INSTANCE)
-                throw new KayJamRuntimeException(func, "The function must return any value of type " +
-                        func.returnType.name);
 
             if(!TypeUtils.isAccept(mainProvider.mainContext, func.returnType,
                     mainProvider.getType(expression, context, argsContext)))

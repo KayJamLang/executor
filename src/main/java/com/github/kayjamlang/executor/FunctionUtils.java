@@ -32,7 +32,7 @@ public class FunctionUtils {
         Object value = new ContainerExecutor()
                 .provide(executor, functionContext, functionContext, function);
         if(!(function instanceof Library.LibFunction)&&
-                value instanceof Void&&function.returnType!=Type.VOID)
+                value instanceof Void&&!function.returnType.equals(Type.VOID))
             throw new KayJamRuntimeException(function, "The function must return a value of type " +
                     function.returnType.name+", not a "+TypeUtils.getType(value.getClass()).name);
 
