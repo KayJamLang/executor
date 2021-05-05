@@ -16,7 +16,8 @@ public class ReturnExpressionExecutor extends ExpressionExecutor<ReturnExpressio
     public Object provide(Executor mainProvider,
                           Context context, Context argsContext, ReturnExpression expression) throws Exception {
         Object value = mainProvider.provide(expression.expression, context, argsContext);
-        if(context.parent instanceof FunctionContainer&&!(context.parent instanceof Library.LibFunction)){
+        if(context.parent instanceof FunctionContainer&&
+                !(context.parent instanceof Library.LibFunction)){
             FunctionContainer func = (FunctionContainer) context.parent;
 
             if (func.returnType == Type.VOID && value != Void.INSTANCE)

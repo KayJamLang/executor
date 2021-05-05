@@ -2,6 +2,7 @@ package com.github.kayjamlang.executor.libs.main;
 
 import com.github.kayjamlang.core.expressions.data.Argument;
 import com.github.kayjamlang.core.Type;
+import com.github.kayjamlang.executor.Void;
 import com.github.kayjamlang.executor.libs.Library;
 
 import java.util.concurrent.TimeUnit;
@@ -21,7 +22,7 @@ public class ThreadsClass extends Library.LibClass {
             addFunction(new Library.LibFunction("sleep", Type.VOID, (mainContext, context) -> {
                 long ms = context.getVariable("ms");
                 TimeUnit.MILLISECONDS.sleep(ms);
-                return null;
+                return Void.INSTANCE;
             }, new Argument(Type.INTEGER, "ms")));
         }
     }

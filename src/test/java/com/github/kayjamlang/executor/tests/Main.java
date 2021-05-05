@@ -16,7 +16,7 @@ public class Main {
     private static Executor executor;
 
     @BeforeClass
-    public static void init(){
+    public static void init() throws Exception {
         KayJamLexer lexer = new KayJamLexer("{\n" +
                 "object Test {" +
                 "fun test(): int {" +
@@ -24,11 +24,12 @@ public class Main {
                 "}" +
                 "}" +
                 "" +
-                "" +
+                "println(rand(1, 50));" +
                 "var test = Test::test();" +
                 "return test; }");
         parser = new KayJamParser(lexer);
         executor = new Executor();
+        executor.addLibrary(new MainLibrary());
     }
 
     @Test

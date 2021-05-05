@@ -6,36 +6,36 @@ import com.github.kayjamlang.core.Type;
 import com.github.kayjamlang.executor.ClassUtils;
 import com.github.kayjamlang.executor.Context;
 import com.github.kayjamlang.executor.Executor;
+import com.github.kayjamlang.executor.Void;
 import com.github.kayjamlang.executor.libs.Library;
 
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
 public class ArrayClass extends Library.LibClass {
 
     public static ArrayClass create(Executor executor, List<?> array) throws Exception {
-        ArrayClass arrayClass = new ArrayClass();
-        Context context = new Context(arrayClass, executor.mainContext, false);
-        context.addVariable("array", array);
-
-        arrayClass.data.put("ctx", context);
-        return arrayClass;
+        return ClassUtils.newInstance(executor, new ArrayClass(),
+                ClassUtils.findConstructor(executor.mainContext,
+                        Collections.singletonList(Type.ARRAY), new ArrayClass()),
+                    Collections.singletonList(array));
     }
 
     public ArrayClass() throws Exception {
         super("array", null);
 
         addConstructor(new Library.LibConstructor((mainContext, context) ->{
-                context.parentContext.addVariable("array", new LinkedList<>());
-                return Void.TYPE;
+            context.parentContext.addVariable("array", new LinkedList<>());
+            return Void.INSTANCE;
         }));
 
-        addConstructor(new Library.LibConstructor((mainContext, context) ->
-                context.parentContext.variables.put("array", context.getVariable("array")),
-                new Argument(Type.of("arr"),
-                        "array")));
+        addConstructor(new Library.LibConstructor((mainContext, context) -> {
+            context.parentContext.addVariable("array", context.getVariable("array"));
+            return Void.INSTANCE;
+        }, new Argument(Type.ARRAY, "array")));
 
-        addFunction(new Library.LibFunction("add", Type.of("array"), (mainContext, context) -> {
+        addFunction(new Library.LibFunction("add", Type.ARRAY, (mainContext, context) -> {
             List<Object> array = getVariable(context, "array");
             array.add(array.size(), context.getVariable("value"));
             return ArrayClass.this;

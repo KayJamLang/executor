@@ -126,9 +126,9 @@ public class Library implements Lib {
         @SuppressWarnings("unchecked")
         public <T> T getVariable(Context ctx, String name){
             if(ctx.parent instanceof ClassContainer)
-                return (T) ctx.variables.get(name);
+                return (T) ctx.getVariable(name);
 
-            return (T) ctx.parentContext.variables.get(name);
+            return (T) ctx.parentContext.getVariable(name);
         }
 
         public interface ClassBind {

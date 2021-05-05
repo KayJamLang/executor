@@ -30,7 +30,7 @@ public class GetExpressionExecutor extends ExpressionExecutor<GetExpression> {
                             mainProvider.getType(expression.value, context, argsContext)));
 
             return FunctionUtils
-                    .callFunction(mainProvider, context, func, Collections.singletonList(
+                    .callFunction(mainProvider, rootContext, func, Collections.singletonList(
                             mainProvider.provide(expression.value, context, argsContext)));
         }
 

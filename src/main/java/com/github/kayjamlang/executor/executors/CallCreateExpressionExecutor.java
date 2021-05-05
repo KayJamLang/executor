@@ -2,6 +2,7 @@ package com.github.kayjamlang.executor.executors;
 
 import com.github.kayjamlang.core.Type;
 import com.github.kayjamlang.core.containers.ClassContainer;
+import com.github.kayjamlang.core.containers.ConstructorContainer;
 import com.github.kayjamlang.core.containers.FunctionContainer;
 import com.github.kayjamlang.core.containers.ObjectContainer;
 import com.github.kayjamlang.core.exceptions.TypeException;
@@ -50,25 +51,37 @@ public class CallCreateExpressionExecutor extends ExpressionExecutor<CallOrCreat
         }
 
         if(mainProvider.mainContext.classes.containsKey(expression.name)){
-            ClassContainer classContainer =
+            ClassContainer clazz =
                     mainProvider.mainContext.classes.get(expression.name)
                             .clone();
-            ClassContainer clazz = ClassUtils.newInstance(mainProvider,
-                    classContainer, argsContext, expression.arguments, types);
-            if(clazz!=null)
-                return clazz;
+            ConstructorContainer constructor = ClassUtils
+                    .findConstructor(mainProvider.mainContext, types, clazz);
+            if(constructor!=null) {
+
+                clazz = ClassUtils.newInstance(mainProvider, clazz, constructor,
+                            provideArgs(mainProvider, argsContext, expression));
+                if (clazz != null)
+                    return clazz;
+            }
         }
 
         FunctionContainer function = (FunctionContainer)
                 context.findFunction(mainProvider.mainContext, expression, expression.name, types)
                 .clone();
 
+        return FunctionUtils.callFunction(mainProvider, context, function,
+                provideArgs(mainProvider, argsContext, expression));
+    }
+
+    public List<Object> provideArgs(Executor executor,
+                                    Context argsContext,
+                                    CallOrCreateExpression expression) throws Exception {
         List<Object> args = new ArrayList<>();
         for(Expression arg: expression.arguments)
-            args.add(mainProvider.provide(arg,
+            args.add(executor.provide(arg,
                     argsContext, argsContext));
 
-        return FunctionUtils.callFunction(mainProvider, context, function, args);
+        return args;
     }
 
     @Override

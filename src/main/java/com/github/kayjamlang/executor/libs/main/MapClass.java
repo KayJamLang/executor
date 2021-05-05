@@ -45,7 +45,8 @@ public class MapClass extends Library.LibClass {
 
         addFunction(new Library.LibFunction("get", Type.of("map"), (mainContext, context) -> {
             Map<Object, Object> map = getVariable(context, FIELD_MAP);
-            return map.getOrDefault(context.getVariable("key"), context.getVariable("defaultValue"));
+            return map.getOrDefault(context.getVariable("key"),
+                    context.getVariable("defaultValue"));
         }, new Argument(Type.ANY, "key"),
                 new Argument(Type.ANY, "defaultValue")));
     }

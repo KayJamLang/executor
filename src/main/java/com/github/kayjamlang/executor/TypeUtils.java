@@ -71,9 +71,9 @@ public class TypeUtils {
         if(type.equals(Type.DOUBLE))
             return number.doubleValue();
         else if(type.equals(Type.LONG))
-            return number.longValue();
+            return (long) number.doubleValue();
 
-        return number.intValue();
+        return (int) number.doubleValue();
     }
 
 

@@ -17,9 +17,10 @@ public class CompanionAccessExpressionExecutor extends ExpressionExecutor<Compan
         if(mainProvider.mainContext.classes.containsKey(expression.className)){
             ClassContainer classContainer =
                     mainProvider.mainContext.classes.get(expression.className);
-
-            Context rootContext = (Context) classContainer.companion.data.get("ctx");
-            return mainProvider.provide(expression.child, rootContext, argsContext);
+            if(classContainer.companion!=null) {
+                Context rootContext = (Context) classContainer.companion.data.get("ctx");
+                return mainProvider.provide(expression.child, rootContext, argsContext);
+            }
         }
 
         throw new KayJamNotFoundException(expression, "class", expression.className);
@@ -34,9 +35,10 @@ public class CompanionAccessExpressionExecutor extends ExpressionExecutor<Compan
             ClassContainer classContainer =
                     mainProvider.mainContext.classes.get(expression.className);
 
-            Context rootContext = (Context) classContainer.companion.data.get("ctx");
-            Type type = mainProvider.getType(expression.child, rootContext, argsContext);
-            return type;
+            if(classContainer.companion!=null) {
+                Context rootContext = (Context) classContainer.companion.data.get("ctx");
+                return mainProvider.getType(expression.child, rootContext, argsContext);
+            }
         }
 
         return Type.VOID;

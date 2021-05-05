@@ -153,9 +153,8 @@ public class Executor extends MainExpressionProvider<Object, Context, MainContex
 
             if(classContainer.companion!=null){
                 Context ctx = new Context(classContainer.companion, mainContext, false);
-                for(Expression child: classContainer.companion.children){
-                    if(child.getClass()==VariableExpression.class)
-                        provide(child, ctx, ctx);
+                for(Expression child: classContainer.companion.variables){
+                    provide(child, ctx, ctx);
                 }
 
                 classContainer.companion.data.put("ctx", ctx);

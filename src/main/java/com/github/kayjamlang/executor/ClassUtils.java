@@ -34,11 +34,13 @@ public class ClassUtils {
     public static <T extends ClassContainer> T newInstance(
             Executor executor,
             T clazz,
-            Context argsContext,
-            List<Expression> arguments,
-            List<Type> types) throws Exception {
-        Context context = executor.mainContext;
-        Context classContext = new Context(clazz, context,
+            ConstructorContainer constructor,
+            List<Object> parameters) throws Exception {
+        if(constructor==null||
+                constructor.arguments.size()!=parameters.size())
+            return null;
+
+        Context classContext = new Context(clazz, executor.mainContext,
                 false);
 
         ClassContainer extendsClass = (ClassContainer)
@@ -46,14 +48,14 @@ public class ClassUtils {
 
         List<String> vars = new ArrayList<>();
         for(VariableExpression variableExpression: clazz.variables)
-                vars.add(variableExpression.name);
+            vars.add(variableExpression.name);
 
         while (extendsClass!=null){
             for(VariableExpression variableExpression: extendsClass.variables)
-                    if(!vars.contains(variableExpression.name)) {
-                        clazz.variables.add(variableExpression);
-                        vars.add(variableExpression.name);
-                    }
+                if(!vars.contains(variableExpression.name)) {
+                    clazz.variables.add(variableExpression);
+                    vars.add(variableExpression.name);
+                }
 
             clazz.functions.addAll(extendsClass.functions);
 
@@ -61,47 +63,29 @@ public class ClassUtils {
                     extendsClass.data.getOrDefault("extends", null);
         }
 
-        ConstructorContainer constructorContainer = null;
-        if(clazz.constructors.size()==0&&types.size()==0){
-            constructorContainer = new ConstructorContainer(new ArrayList<>(),
-                    new ArrayList<>(), AccessIdentifier.NONE, 0);
-        }else{
-            for (ConstructorContainer constructor : clazz.constructors) {
-                if (constructor.arguments.size()==types.size()&&
-                        TypeUtils.isAccept(executor.mainContext,
-                                constructor.arguments, types)) {
-                    constructorContainer = constructor;
-                    break;
-                }
-            }
+        classContext.variables.clear();
+        for(VariableExpression variable: clazz.variables)
+            executor.provide(variable, classContext, classContext);
+
+        Context constructorClass =
+                new Context(constructor, classContext, true);
+        constructorClass.addVariable("this", clazz);
+        clazz.data.put("ctx", classContext);
+
+        for (int argNum = 0; argNum < constructor.arguments.size(); argNum++) {
+            constructorClass.variables.put(constructor.arguments.get(argNum).name,
+                    new Context.LocalVariable(
+                            constructor.arguments.get(argNum).type,
+                            parameters.get(argNum)
+                    ));
         }
 
-        if(constructorContainer!=null){
-            classContext.variables.clear();
-            for(VariableExpression variable: clazz.variables)
-                executor.provide(variable, classContext, classContext);
+        new ContainerExecutor().provide(executor,
+                constructorClass,
+                constructorClass,
+                constructor);
 
-            Context constructorClass =
-                    new Context(constructorContainer, classContext, true);
-            constructorClass.addVariable("this", clazz);
-            clazz.data.put("ctx", classContext);
-
-            for (int argNum = 0; argNum < constructorContainer.arguments.size(); argNum++) {
-                constructorClass.variables.put(constructorContainer.arguments.get(argNum).name,
-                        new Context.LocalVariable(
-                            types.get(argNum),
-                            executor.provide(arguments.get(argNum), argsContext, argsContext)
-                         ));
-            }
-
-            new ContainerExecutor().provide(executor,
-                    constructorClass,
-                    constructorClass,
-                    constructorContainer);
-
-            return clazz;
-        }
-
-        return null;
+        return clazz;
     }
+
 }

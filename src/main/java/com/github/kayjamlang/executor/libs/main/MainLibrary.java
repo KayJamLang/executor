@@ -116,6 +116,15 @@ public class MainLibrary extends Library {
         classes.put("Math", new MathClass());
         classes.put("map", new MapClass());
         classes.put("array", new ArrayClass());
+
+        addFunction(new LibFunction("rand", Type.INTEGER, (mainContext, context) -> {
+            int min = context.getVariable("min");
+            int max = context.getVariable("max");
+
+            max -= min;
+            return (int) (Math.random() * ++max) + min;
+        }, new Argument(Type.INTEGER, "min"),
+                new Argument(Type.INTEGER, "max")));
     }
 
     public interface Output{
